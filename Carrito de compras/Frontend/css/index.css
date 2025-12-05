@@ -1,0 +1,104 @@
+.topbar {
+    width: 100%;
+    background-color: #0084ff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.icon-left img {
+    width: 40px;
+    height: 40px;
+}
+
+.user-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #000;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 20px;
+    margin-bottom: 120px;
+}
+
+.card {
+    background-color: white;
+    width: 350px;
+    min-height: 300px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.product {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product img {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 70%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px auto;
+    display: block;
+}
+
+.btn-blue {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #0060c7;
+}
+
+.btn-green {
+    background-color: #22c55e;
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #1c9e4c;
+}
+
+.bottombar {
+    width: 100%;
+   background-color: #0084ff;
+    height: 70px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
