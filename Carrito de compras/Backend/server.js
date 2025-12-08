@@ -1,24 +1,28 @@
 import express from 'express';
 import path from 'path';
-//aqui nosotros tenemos que agregar las rutas que se van a consumir
 import productroutes from './routes/productroutes.js';
 
-
 const app = express();
-const PORT = process.env.PORT || 3000;  
+const PORT = process.env.PORT || 3000;
 
-const __dirname = path.resolve(); // Obtener el directorio actual
+const __dirname = path.resolve();
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname,  '../Frontend', 'public')));
 
-app.set('views engine', 'ejs');
-app.set('public', path.join(__dirname, '../Frontend', 'public'));
+// Archivos estáticos (CSS, imágenes, JS)
+app.use(express.static(path.join(__dirname, '../Frontend')));
 
-//vamos a consumir las rutas
+// Configuración de EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../Frontend/views'));
+
+// Rutas
 app.use('/', productroutes);
 
+// Server
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });
