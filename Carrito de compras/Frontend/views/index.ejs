@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,44 +9,95 @@
 <body>
     <div class="topbar">
         <div class="icon-left">
-
             <img src="../img/Carritodcompras.png" alt="Carrito">
         </div>
-
         <div class="user-circle">U</div>
     </div>
 
-    <h1><b>Carrito de Compras de quesos</b></h1>
+    <h1><b>Carrito de Compras de Quesos Mini Babybel</b></h1>
 
     <div class="container">
-
-
-        <div class="card">
-            <div class="product">
-                <img src="lapiz.png" alt="Lápiz">
-                <div>
-                    <p>Queso 1</p>
-                    <p>$100</p>
+        <div class="productos-container">
+            <% if (productos && productos.length > 0) { %>
+                <% productos.forEach(function(producto) { %>
+                    <div class="card">
+                        <div class="product">
+                            <img src="../img/<%= producto.imagen %>" alt="<%= producto.nombre %>" onerror="this.src='../img/default-cheese.png'">
+                            <div>
+                                <p><strong><%= producto.nombre %></strong></p>
+                                <p><%= producto.descripcion %></p>
+                                <p class="precio">$<%= producto.precio %></p>
+                                <button class="btn-add" onclick="agregarAlCarrito(<%= producto.id %>, '<%= producto.nombre %>', <%= producto.precio %>)">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="card">
+                    <p>No hay productos disponibles</p>
                 </div>
-            </div>
+            <% } %>
         </div>
 
-
-        <div class="card">
-            <button class="btn-blue">Buscar producto</button>
-            <button class="btn-blue">Vaciar Carrito</button>
-
+        <div class="card carrito-resumen">
+            <h3>Resumen del Carrito</h3>
+            <div id="carrito-items"></div>
+            <button class="btn-blue" onclick="vaciarCarrito()">Vaciar Carrito</button>
             <p><b>Total:</b></p>
-            <p>$100</p>
-
+            <p id="total">$0.00</p>
             <br>
-
-            <button class="btn-green">Comprar</button>
+            <button class="btn-green" onclick="comprar()">Comprar</button>
         </div>
-
     </div>
 
-
     <div class="bottombar"></div>
+
+    <script>
+        let carrito = [];
+
+        function agregarAlCarrito(id, nombre, precio) {
+            const item = carrito.find(i => i.id === id);
+            if (item) {
+                item.cantidad++;
+            } else {
+                carrito.push({ id, nombre, precio, cantidad: 1 });
+            }
+            actualizarCarrito();
+        }
+
+        function vaciarCarrito() {
+            carrito = [];
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            const carritoItems = document.getElementById('carrito-items');
+            const totalElement = document.getElementById('total');
+            
+            carritoItems.innerHTML = '';
+            let total = 0;
+
+            carrito.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'carrito-item';
+                itemDiv.innerHTML = `
+                    <p>${item.nombre} x${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}</p>
+                `;
+                carritoItems.appendChild(itemDiv);
+                total += item.precio * item.cantidad;
+            });
+
+            totalElement.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function comprar() {
+            if (carrito.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            alert('Compra realizada con éxito por un total de $' + document.getElementById('total').textContent);
+            vaciarCarrito();
+        }
+    </script>
 </body>
 </html>

@@ -12,11 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Archivos estáticos (CSS, imágenes, JS)
-app.use(express.static(path.join(__dirname, '../Frontend')));
+app.use(express.static(path.join(__dirname, 'Frontend')));
 
 // Configuración de EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../Frontend/views'));
+app.set('views', path.join(__dirname, 'Frontend/views'));
 
 // Rutas
 app.use('/', productroutes);
