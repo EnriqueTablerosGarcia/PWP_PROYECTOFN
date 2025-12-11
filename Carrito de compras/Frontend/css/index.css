@@ -76,7 +76,36 @@ button {
     display: block;
 }
 
+.btn-blue,
+.btn-green {
+    display: block;         
+    width: 100%;             
+    text-align: center;     
+    padding: 12px 0;        
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
 .btn-blue {
+    background-color: #007bff;
+}
+
+.btn-blue:hover {
+    background-color: #0060c7;
+}
+
+.btn-green {
+    background-color: #22c55e;
+}
+
+.btn-green:hover {
+    background-color: #1c9e4c;
+}
+
+/*.btn-blue {
     background-color: #007bff;
     color: white;
 }
@@ -86,19 +115,34 @@ button {
 }
 
 .btn-green {
-    background-color: #22c55e;
+    background-color: #22c55e;  
     color: white;
+    padding: 10px 20px;          
+    border: none;
+    border-radius: 8px;          
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;                 
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-green:hover {
-    background-color: #1c9e4c;
+    background-color: #1c9e4c;   
+    transform: scale(1.03);  
 }
+*/
 
 .bottombar {
     width: 100%;
-   background-color: #0084ff;
+    background-color: #0084ff;
     height: 70px;
     position: fixed;
     bottom: 0;
     left: 0;
+}
+
+a {
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
 }

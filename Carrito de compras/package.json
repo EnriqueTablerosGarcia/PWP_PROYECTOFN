@@ -1,10 +1,11 @@
 {
-  "name": "14-apicrud",
+  "name": "carrito-quesos",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon backend/server.js"
+    "start": "nodemon backend/server.js",
+    "init-db": "node backend/initDB.js"
   },
   "type" : "module",
   "keywords": [],
