@@ -21,19 +21,66 @@
 
         <div class="campo">
             <label>Nombre:</label>
-            <div class="cuadro">Juan Pérez</div>
+            <div class="cuadro"><%= typeof user !== 'undefined' ? user.nombre : 'Usuario' %></div>
         </div>
 
         <div class="campo">
             <label>Correo:</label>
-            <div class="cuadro">juan@gmail.com</div>
+            <div class="cuadro"><%= typeof user !== 'undefined' ? user.email : 'usuario@email.com' %></div>
         </div>
 
-        <a href="./cambContra.ejs">Cambiar Contraseña</a>
-        <a href="./cambCorreo.ejs">Cambiar Correo</a>
-        <a href="./index.ejs">Regresar</a>
+        <a href="/cambContra">Cambiar Contraseña</a>
+        <a href="/cambCorreo">Cambiar Correo</a>
+        <a href="/carrito">Regresar</a>
+        <button onclick="eliminarCuenta()" class="btn-eliminar">Eliminar Cuenta</button>
     </div>
 
-    <div class="bottombar"></div>
+    <script>
+        // Cargar datos del usuario desde localStorage
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (usuario) {
+            document.querySelectorAll('.cuadro')[0].textContent = usuario.nombre;
+            document.querySelectorAll('.cuadro')[1].textContent = usuario.email;
+        }
+
+        function eliminarCuenta() {
+            if (!usuario || !usuario.id) {
+                alert('No hay sesión activa');
+                window.location.href = '/login';
+                return;
+            }
+
+            if (confirm('¿Seguro de que quieres borrar tu cuenta? Esta acción no se puede deshacer.')) {
+                // Enviar solicitud para eliminar cuenta
+                fetch('/eliminar-cuenta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: usuario.id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Limpiar localStorage
+                        localStorage.removeItem('usuario');
+                        localStorage.removeItem('carritoActual');
+                        localStorage.removeItem('totalActual');
+                        localStorage.removeItem('carritoComprado');
+                        localStorage.removeItem('totalCompra');
+                        
+                        alert('Cuenta eliminada exitosamente');
+                        window.location.href = '/login';
+                    } else {
+                        alert('Error al eliminar la cuenta: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar la cuenta');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

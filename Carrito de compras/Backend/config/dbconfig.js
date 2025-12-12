@@ -14,15 +14,15 @@ const config = mysql.createPool({
     
     host : 'localhost',
     user : 'root',
-    password : '',
-    database : 'curso',
+    password : 'Karl!2008',
+    database : 'carrito_db',
 
     //connectionLimit : 10,
     //acquireTimeout : 30000,
     //idleTimeout : 30000,
 });
 
-config.getConnection((err) => {
+config.getConnection((err, connection) => {
     if(err){
         console.log('Error de conexion a la base de datos', err);
         return;

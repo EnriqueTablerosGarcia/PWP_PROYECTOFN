@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,32 +7,85 @@
     <link rel="stylesheet" href="../css/ticket.css">
 </head>
 <body>
-    <div class="container">
+    <div class="topbar">
+        <div class="icon-left">
+            <a href="/carrito">
+                <img src="../img/Carritodcompras.png" alt="Carrito">
+            </a>
+        </div>
+        <div class="topbar-center">
+            <a href="/carrito" class="btn-inicio">Inicio</a>
+        </div>
+        <a class="user-circle" href="/usuario">U</a>
+    </div>
+
+    <div class="container" style="margin-top: 80px;">
         <h2>Ticket de Compra</h2>
 
-        <div class="info-box">
-            <div class="section-title">Producto:
-                <div class="producto-item">
-                    <img src="../img/babybel-original.png" alt="Mini Babybel" class="producto-img">
-                    <p class="producto-nombre">Mini Babybel Mozzarella</p>
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="info-box">
-            <div class="section-title">Precio:</div>
-            $49
-        </div>
+        <div id="productos-ticket"></div>
 
         <div class="total">
-            Total: $49
+            Total: $<span id="total-ticket">0.00</span>
         </div>
 
-        <a href="./index.ejs" class="button" onclick="comprar()">Comprar</a>
-
-        <a href="../views/index.ejs" class="button">Regresar</a>
-        
+        <button onclick="confirmarCompra()" class="button btn-comprar">Comprar</button>
+        <a href="/carrito" class="button btn-regresar">Regresar</a>
     </div>
+
+    <script>
+        // Obtener datos del carrito
+        const carritoActual = JSON.parse(localStorage.getItem('carritoActual') || '[]');
+        const totalActual = localStorage.getItem('totalActual') || '0.00';
+
+        // Mostrar productos en el ticket
+        const productosTicket = document.getElementById('productos-ticket');
+        const totalTicket = document.getElementById('total-ticket');
+
+        if (carritoActual.length > 0) {
+            carritoActual.forEach(item => {
+                const productoBox = document.createElement('div');
+                productoBox.className = 'info-box';
+                productoBox.innerHTML = `
+                    <div class="section-title">Producto:</div>
+                    <div class="producto-item">
+                        <img src="../img/babybel-${item.nombre.toLowerCase().includes('gouda') ? 'gouda' : item.nombre.toLowerCase().includes('mozzarella') ? 'mozzarella' : 'original'}.png" 
+                             alt="${item.nombre}" 
+                             class="producto-img"
+                             onerror="this.src='../img/default-cheese.png'">
+                        <div>
+                            <p class="producto-nombre">${item.nombre}</p>
+                            <p>Cantidad: ${item.cantidad}</p>
+                            <p>Precio unitario: $${item.precio.toFixed(2)}</p>
+                            <p><strong>Subtotal: $${(item.precio * item.cantidad).toFixed(2)}</strong></p>
+                        </div>
+                    </div>
+                `;
+                productosTicket.appendChild(productoBox);
+            });
+
+            totalTicket.textContent = totalActual;
+        } else {
+            productosTicket.innerHTML = '<div class="info-box"><p>No hay productos en el carrito</p></div>';
+        }
+
+        function confirmarCompra() {
+            if (carritoActual.length === 0) {
+                alert('No hay productos para comprar');
+                window.location.href = '/carrito';
+                return;
+            }
+
+            // Guardar datos para la página de confirmación
+            localStorage.setItem('carritoComprado', JSON.stringify(carritoActual));
+            localStorage.setItem('totalCompra', totalActual);
+            
+            // Limpiar carrito actual
+            localStorage.removeItem('carritoActual');
+            localStorage.removeItem('totalActual');
+
+            // Redireccionar a confirmación
+            window.location.href = '/confirmacion';
+        }
+    </script>
 </body>
 </html>

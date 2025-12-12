@@ -11,6 +11,25 @@
 <body>
     <div class="container">
         <h2>Iniciar Sesión</h2>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-error">
+                <%= error %>
+            </div>
+            <script>
+                // Limpiar cualquier dato de usuario guardado
+                localStorage.removeItem('usuario');
+                localStorage.removeItem('carritoActual');
+                localStorage.removeItem('totalActual');
+            </script>
+        <% } %>
+        
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div class="alert alert-success">
+                <%= success %>
+            </div>
+        <% } %>
+        
         <form action="login" method="post">
             <input type="email" name="email" placeholder="Correo" required>
             <input type="password" name="password" placeholder="Contraseña" required>

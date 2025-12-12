@@ -55,6 +55,25 @@ a:hover {
     background-color: #006ed1;
 }
 
+.btn-eliminar {
+    display: block;
+    width: 90%;
+    padding: 12px;
+    margin: 15px auto 10px;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-eliminar:hover {
+    background-color: #b91c1c;
+}
+
 
 .bottombar {
     width: 100%;

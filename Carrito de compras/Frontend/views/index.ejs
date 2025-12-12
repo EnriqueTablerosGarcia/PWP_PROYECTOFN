@@ -9,9 +9,14 @@
 <body>
     <div class="topbar">
         <div class="icon-left">
-            <img src="../img/Carritodcompras.png" alt="Carrito">
+            <a href="/carrito">
+                <img src="../img/Carritodcompras.png" alt="Carrito">
+            </a>
         </div>
-        <a class="user-circle" href="./usuario.ejs">U</a>
+        <div class="topbar-center">
+            <a href="/carrito" class="btn-inicio">Inicio</a>
+        </div>
+        <a class="user-circle" href="/usuario">U</a>
     </div>
 
     <h1><b>Carrito de Compras de Quesos Mini Babybel</b></h1>
@@ -46,13 +51,20 @@
             <p><b>Total:</b></p>
             <p id="total">$0.00</p>
             <br>
-            <a href="./ticket.ejs" class="btn-green">Proceder al Pago</a>
+            <a href="#" onclick="procederAlPago(event)" class="btn-green">Proceder al Pago</a>
         </div>
     </div>
 
-    <div class="bottombar"></div>
-
     <script>
+        // Guardar datos del usuario en localStorage
+        <% if (typeof user !== 'undefined') { %>
+            localStorage.setItem('usuario', JSON.stringify({
+                nombre: '<%= user.nombre %>',
+                email: '<%= user.email %>',
+                id: <%= user.id %>
+            }));
+        <% } %>
+        
         let carrito = [];
 
         function agregarAlCarrito(id, nombre, precio) {
@@ -90,6 +102,18 @@
             totalElement.textContent = `$${total.toFixed(2)}`;
         }
 
+        function procederAlPago(event) {
+            event.preventDefault();
+            if (carrito.length === 0) {
+                alert('El carrito está vacío. Agrega productos antes de proceder al pago.');
+                return;
+            }
+            // Guardar carrito en localStorage para pasar a la página de ticket
+            localStorage.setItem('carritoActual', JSON.stringify(carrito));
+            localStorage.setItem('totalActual', document.getElementById('total').textContent.replace('$', ''));
+            window.location.href = '/ticket';
+        }
+
         function comprar() {
             if (carrito.length === 0) {
                 alert('El carrito está vacío');
@@ -99,5 +123,9 @@
             vaciarCarrito();
         }
     </script>
+
+    <div style="text-align: center; padding: 30px 0; margin-bottom: 20px;">
+        <a href="/principal" class="btn-principal">Regresar a la página principal</a>
+    </div>
 </body>
 </html>

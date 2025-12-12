@@ -11,6 +11,13 @@
 <body>
     <div class="container">
         <h2>Crear Cuenta</h2>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-error">
+                <%= error %>
+            </div>
+        <% } %>
+        
         <form action="/register" method="post">
             <input type="text" name="nombre" placeholder="Nombre completo" required>
             <input type="email" name="correo" placeholder="Correo electrónico" required>

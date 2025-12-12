@@ -5,6 +5,70 @@ body {
     padding: 0;
 }
 
+.topbar {
+    width: 100%;
+    background-color: #0084ff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.icon-left img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.icon-left img:hover {
+    transform: scale(1.1);
+}
+
+.topbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-inicio {
+    background-color: white;
+    color: #0084ff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-inicio:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.user-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.user-circle:hover {
+    transform: scale(1.1);
+}
+
 .container {
     width: 90%;
     max-width: 400px;
@@ -43,20 +107,43 @@ h2 {
     color: #0084ff;
 }
 
-a.button {
+button.button, a.button {
     display: block;
     text-align: center;
-    width: auto;
-    padding: 12px;
+    width: 100%;
+    padding: 14px;
     background-color: #0084ff;
     color: white;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
     margin-top: 15px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
 }
 
-a.button:hover {
+button.button:hover, a.button:hover {
+    background-color: #006cd1;
+}
+
+button.btn-comprar {
+    background-color: #4caf50;
+    margin-top: 20px;
+}
+
+button.btn-comprar:hover {
+    background-color: #45a049;
+}
+
+a.btn-regresar {
+    background-color: #0084ff;
+    margin-top: 10px;
+}
+
+a.btn-regresar:hover {
     background-color: #006cd1;
 }
 

@@ -15,6 +15,33 @@
 .icon-left img {
     width: 40px;
     height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.icon-left img:hover {
+    transform: scale(1.1);
+}
+
+.topbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-inicio {
+    background-color: white;
+    color: #0084ff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-inicio:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
 }
 
 .user-circle {
@@ -27,6 +54,12 @@
     align-items: center;
     font-weight: bold;
     color: #000;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.user-circle:hover {
+    transform: scale(1.1);
 }
 
 h1 {
@@ -145,4 +178,23 @@ a {
     text-decoration: none;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 700;
+}
+
+.btn-principal {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #0084ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 132, 255, 0.3);
+}
+
+.btn-principal:hover {
+    background-color: #006cd1;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 132, 255, 0.4);
 }
