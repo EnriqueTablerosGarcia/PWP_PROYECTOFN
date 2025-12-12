@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/carrito.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="icon-left">
+            <img src="../img/Carritodcompras.png" alt="Carrito">
+        </div>
+    </div>
+
+    <div class="card carrito-resumen">
+        <h3>Resumen del Carrito</h3>
+
+        <div id="carrito-items"></div>
+
+        <button class="btn-blue" onclick="vaciarCarrito()">Vaciar Carrito</button>
+
+        <p><b>Total:</b></p>
+        <p id="total">$0.00</p>
+
+        <br>
+
+        <a class="regresar" href="/carrito">Regresar</a>
+        <a href="#" onclick="procederAlPago(event)" class="btn-green">Proceder al Pago</a>
+    </div>
+</body>
+</html>
