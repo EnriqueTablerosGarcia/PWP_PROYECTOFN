@@ -11,23 +11,13 @@
         <h2>Ticket de Compra</h2>
 
         <div class="info-box">
-            <div class="section-title">Cliente:</div>
-            Usuario
-        </div>
-
-        <div class="info-box">
-            <div class="section-title">Fecha:</div>
-            11/12/2025
-        </div>
-
-        <div class="info-box">
-            <div class="section-title">Producto:</div>
-            Mini Babybel Mozzarella
-        </div>
-
-        <div class="info-box">
-            <div class="section-title">Cantidad:</div>
-            1
+            <div class="section-title">Producto:
+                <div class="producto-item">
+                    <img src="../img/babybel-original.png" alt="Mini Babybel" class="producto-img">
+                    <p class="producto-nombre">Mini Babybel Mozzarella</p>
+                </div>
+            </div>
+            
         </div>
 
         <div class="info-box">
@@ -39,7 +29,10 @@
             Total: $49
         </div>
 
+        <a href="./index.ejs" class="button" onclick="comprar()">Comprar</a>
+
         <a href="../views/index.ejs" class="button">Regresar</a>
+        
     </div>
 </body>
 </html>
