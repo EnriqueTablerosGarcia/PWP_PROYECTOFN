@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra Exitosa</title>
-    <link rel="stylesheet" href="../css/confirmacion.css">
+    <link rel="stylesheet" href="/css/confirmacion.css">
 </head>
 <body>
     <div class="topbar">
         <div class="icon-left">
             <a href="/carrito">
-                <img src="../img/Carritodcompras.png" alt="Carrito">
+                <img src="/img/Carritodcompras.png" alt="Carrito">
             </a>
         </div>
         <div class="topbar-center">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="botones">
-            <a href="/carrito" class="btn-primary">Volver al Carrito</a>
+            <a href="/carrito" class="btn-primary">Volver a la página de Compras</a>
             <a href="/login" class="btn-secondary">Cerrar Sesión</a>
         </div>
     </div>
@@ -53,9 +53,9 @@
                 const productoDiv = document.createElement('div');
                 productoDiv.className = 'producto-item';
                 productoDiv.innerHTML = `
-                    <img src="../img/babybel-${item.nombre.toLowerCase().includes('gouda') ? 'gouda' : item.nombre.toLowerCase().includes('mozzarella') ? 'mozzarella' : 'original'}.png" 
+                    <img src="/img/babybel-${item.nombre.toLowerCase().includes('gouda') ? 'gouda' : item.nombre.toLowerCase().includes('mozzarella') ? 'mozzarella' : 'original'}.png" 
                          alt="${item.nombre}" 
-                         onerror="this.src='../img/default-cheese.png'">
+                         onerror="this.src='/img/default-cheese.png'">
                     <div class="producto-info">
                         <h3>${item.nombre}</h3>
                         <p>Cantidad: ${item.cantidad}</p>
