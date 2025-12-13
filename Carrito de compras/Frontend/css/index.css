@@ -379,6 +379,7 @@ a {
 .btn-green {
     background-color: #4ade80;
     color: white;
+    width: auto;
 }
 
 .btn-green:hover {
