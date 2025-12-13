@@ -141,6 +141,7 @@ button.btn-comprar:hover {
 a.btn-regresar {
     background-color: #0084ff;
     margin-top: 10px;
+    width: auto;
 }
 
 a.btn-regresar:hover {
