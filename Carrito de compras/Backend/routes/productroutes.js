@@ -101,13 +101,15 @@ router.post('/login', (req, res) => {
             console.log('Login exitoso para:', email);
             const usuarioData = { nombre: usuario.nombre, email: usuario.email, id: usuario.id };
 
-            config.query("SELECT * FROM productos", (err, productos) => {
-                if (err) {
-                    console.error(err);
-                    return res.render('index', { user: usuarioData, productos: [] });
-                }
-                return res.render('index', { user: usuarioData, productos: productos });
-            });
+            // Redirigir a la página principal después del login exitoso
+            res.send(`
+                <script>
+                    localStorage.setItem('usuarioNombre', '${usuario.nombre}');
+                    localStorage.setItem('usuarioEmail', '${usuario.email}');
+                    localStorage.setItem('usuarioId', '${usuario.id}');
+                    window.location.href = '/principal';
+                </script>
+            `);
         }
     );
 });

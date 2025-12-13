@@ -12,10 +12,10 @@ dotenv.config();
 
 const config = mysql.createPool({
 
-    host: 'localhost',
-    user: 'root',
-    password: 'kenai123',
-    database: 'carrito_db',
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'Karl!2008',
+    database: process.env.DB_NAME || 'carrito_db',
 
     //connectionLimit : 10,
     //acquireTimeout : 30000,

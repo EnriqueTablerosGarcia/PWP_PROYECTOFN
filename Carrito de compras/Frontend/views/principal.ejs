@@ -4,18 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagina Principal</title>
-    <link rel="stylesheet" href="../css/principal.css">
+    <link rel="stylesheet" href="/css/principal.css">
 </head>
 <body>
     <div class="topbar">
-        <a href="/login">Iniciar sesión</a>
-        <a href="/crearCuenta">Crear cuenta</a>
+        <div class="topbar-left">
+            <a href="/carrito" class="cart-container">
+                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
+            </a>
+        </div>
+        <div class="topbar-center">
+            <span class="brand-title">QUESOS BABYBEL</span>
+        </div>
+        <div class="topbar-right">
+            <a href="/login" id="link-login">Iniciar sesión</a>
+            <a href="/crearCuenta" id="link-crear">Crear cuenta</a>
+            <a href="/usuario" class="user-circle" id="link-usuario" style="display: none;">U</a>
+        </div>
     </div>
 
     <div class="container">
-        <h1>Bienvenido al carrito de compras</h1>
-        <img src="../img/Carritodcompras.png" alt="Carrito de Compras">
+        <h1>Bienvenido al carrito de compras de quesos</h1>
+        <img src="/img/Carritodcompras.png" alt="Carrito de Compras">
     </div>
+
+    <div class="productos-container">
+        <div class="producto-card">
+            <img src="/img/babybel-original.png" alt="Mini Babybel Original">
+            <h3>Mini Babybel Original</h3>
+            <p>Queso Mini Babybel Original con su característica envoltura roja</p>
+            <p class="precio">$45.00</p>
+            <div class="cantidad-controls" style="display: none;">
+                <button class="btn-menos" data-producto="Mini Babybel Original">-</button>
+                <input type="number" class="cantidad-input" value="1" min="1" max="100" data-producto="Mini Babybel Original" data-stock="100">
+                <button class="btn-mas" data-producto="Mini Babybel Original">+</button>
+            </div>
+            <button class="btn-agregar" data-producto="Mini Babybel Original" data-precio="45" data-stock="100">Iniciar sesión para comprar</button>
+        </div>
+
+        <div class="producto-card">
+            <img src="/img/babybel-gouda.png" alt="Mini Babybel Gouda">
+            <h3>Mini Babybel Gouda</h3>
+            <p>Queso Mini Babybel sabor Gouda con envoltura amarilla</p>
+            <p class="precio">$48.00</p>
+            <div class="cantidad-controls" style="display: none;">
+                <button class="btn-menos" data-producto="Mini Babybel Gouda">-</button>
+                <input type="number" class="cantidad-input" value="1" min="1" max="100" data-producto="Mini Babybel Gouda" data-stock="100">
+                <button class="btn-mas" data-producto="Mini Babybel Gouda">+</button>
+            </div>
+            <button class="btn-agregar" data-producto="Mini Babybel Gouda" data-precio="48" data-stock="100">Iniciar sesión para comprar</button>
+        </div>
+
+        <div class="producto-card">
+            <img src="/img/babybel-mozzarella.png" alt="Mini Babybel Mozzarella">
+            <h3>Mini Babybel Mozzarella</h3>
+            <p>Queso Mini Babybel Mozzarella con envoltura blanca</p>
+            <p class="precio">$50.00</p>
+            <div class="cantidad-controls" style="display: none;">
+                <button class="btn-menos" data-producto="Mini Babybel Mozzarella">-</button>
+                <input type="number" class="cantidad-input" value="1" min="1" max="100" data-producto="Mini Babybel Mozzarella" data-stock="100">
+                <button class="btn-mas" data-producto="Mini Babybel Mozzarella">+</button>
+            </div>
+            <button class="btn-agregar" data-producto="Mini Babybel Mozzarella" data-precio="50" data-stock="100">Iniciar sesión para comprar</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar el ícono del carrito
+        function actualizarIconoCarrito() {
+            const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const cartIcon = document.getElementById('cart-icon');
+            
+            if (cartIcon) {
+                if (totalItems > 0) {
+                    // Mostrar carrito cargado
+                    cartIcon.src = '/img/carritolleno.png';
+                    cartIcon.alt = 'Carrito Cargado';
+                } else {
+                    // Mostrar carrito vacío
+                    cartIcon.src = '/img/Carritoicono.png';
+                    cartIcon.alt = 'Carrito Vacío';
+                }
+            }
+        }
+
+        // Verificar si hay un usuario logueado
+        const usuarioLogueado = localStorage.getItem('usuarioNombre');
+        const botones = document.querySelectorAll('.btn-agregar');
+        const cantidadControls = document.querySelectorAll('.cantidad-controls');
+
+        // Actualizar UI según estado de sesión
+        if (usuarioLogueado) {
+            document.getElementById('link-login').style.display = 'none';
+            document.getElementById('link-crear').style.display = 'none';
+            document.getElementById('link-usuario').style.display = 'block';
+            
+            // Mostrar controles de cantidad
+            cantidadControls.forEach(control => {
+                control.style.display = 'flex';
+            });
+            
+            // Si hay sesión activa, cambiar los botones a "Agregar al Carrito"
+            botones.forEach(boton => {
+                boton.textContent = 'Agregar al Carrito';
+                boton.onclick = function() {
+                    const nombreProducto = this.getAttribute('data-producto');
+                    const precio = parseFloat(this.getAttribute('data-precio'));
+                    const stockDisponible = parseInt(this.getAttribute('data-stock'));
+                    
+                    // Obtener cantidad del input correspondiente
+                    const inputCantidad = document.querySelector(`.cantidad-input[data-producto="${nombreProducto}"]`);
+                    const cantidadDeseada = parseInt(inputCantidad.value);
+                    
+                    // Obtener el carrito actual
+                    let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+                    
+                    // Buscar si el producto ya existe en el carrito
+                    const productoExistente = carrito.find(item => item.nombre === nombreProducto);
+                    const cantidadEnCarrito = productoExistente ? productoExistente.cantidad : 0;
+                    const cantidadTotal = cantidadEnCarrito + cantidadDeseada;
+                    
+                    // Verificar stock
+                    if (cantidadTotal > stockDisponible) {
+                        const disponible = stockDisponible - cantidadEnCarrito;
+                        alert(`No hay suficiente stock. Solo puedes agregar ${disponible} unidades más. Stock disponible: ${stockDisponible}`);
+                        return;
+                    }
+                    
+                    // Agregar o actualizar producto
+                    if (productoExistente) {
+                        productoExistente.cantidad = cantidadTotal;
+                    } else {
+                        carrito.push({
+                            nombre: nombreProducto,
+                            precio: precio,
+                            cantidad: cantidadDeseada
+                        });
+                    }
+                    
+                    // Guardar el carrito actualizado
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                    
+                    // Actualizar ícono del carrito
+                    actualizarIconoCarrito();
+                    
+                    // Resetear input a 1
+                    inputCantidad.value = 1;
+                };
+            });
+            
+            // Configurar botones de cantidad
+            document.querySelectorAll('.btn-mas').forEach(btn => {
+                btn.onclick = function() {
+                    const nombreProducto = this.getAttribute('data-producto');
+                    const input = document.querySelector(`.cantidad-input[data-producto="${nombreProducto}"]`);
+                    const stock = parseInt(input.getAttribute('data-stock'));
+                    const valorActual = parseInt(input.value);
+                    
+                    if (valorActual < stock) {
+                        input.value = valorActual + 1;
+                    } else {
+                        alert(`Stock máximo disponible: ${stock} unidades`);
+                    }
+                };
+            });
+            
+            document.querySelectorAll('.btn-menos').forEach(btn => {
+                btn.onclick = function() {
+                    const nombreProducto = this.getAttribute('data-producto');
+                    const input = document.querySelector(`.cantidad-input[data-producto="${nombreProducto}"]`);
+                    const valorActual = parseInt(input.value);
+                    
+                    if (valorActual > 1) {
+                        input.value = valorActual - 1;
+                    }
+                };
+            });
+            
+            // Validar input manual
+            document.querySelectorAll('.cantidad-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const stock = parseInt(this.getAttribute('data-stock'));
+                    let valor = parseInt(this.value);
+                    
+                    if (isNaN(valor) || valor < 1) {
+                        this.value = 1;
+                    } else if (valor > stock) {
+                        this.value = stock;
+                        alert(`Stock máximo disponible: ${stock} unidades`);
+                    }
+                });
+            });
+        } else {
+            // Si no hay sesión, redirigir al login al hacer clic
+            botones.forEach(boton => {
+                boton.onclick = function() {
+                    window.location.href = '/login';
+                };
+            });
+        }
+
+        // Actualizar ícono al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            actualizarIconoCarrito();
+        });
+    </script>
 
 </body>
 </html>

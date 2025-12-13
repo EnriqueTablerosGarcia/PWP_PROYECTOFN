@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS productos (
     precio DECIMAL(10, 2) NOT NULL,
     descripcion TEXT,
     imagen VARCHAR(255),
-    stock INT DEFAULT 0,
+    stock INT DEFAULT 0, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

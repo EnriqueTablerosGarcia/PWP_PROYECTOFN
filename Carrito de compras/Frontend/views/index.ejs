@@ -12,57 +12,29 @@
     <div class="topbar">
         <div class="icon-left">
             <a href="/carrito" class="cart-container">
-                <img src="../img/Carritodcompras.png" alt="Carrito" class="cart-icon">
-                <span class="cart-badge">0</span>
-                <div class="cart-tooltip">Haz clic para ver tu carrito</div>
+                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
         <div class="topbar-center">
-            <a href="/carrito" class="btn-inicio">Inicio</a>
+            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
         </div>
         <a class="user-circle" href="/usuario">U</a>
     </div>
 
     <h1><b>Carrito de Compras de Quesos Mini Babybel</b></h1>
 
-    <div class="container">
-        <div class="productos-container">
-            <% if (productos && productos.length> 0) { %>
-                <% productos.forEach(function(producto) { %>
-                    <div class="card">
-                        <div class="product">
-                            <img src="../img/<%= producto.imagen %>" alt="<%= producto.nombre %>"
-                                onerror="this.src='../img/default-cheese.png'">
-                            <div>
-                                <p><strong>
-                                        <%= producto.nombre %>
-                                    </strong></p>
-                                <p>
-                                    <%= producto.descripcion %>
-                                </p>
-                                <p class="precio">$<%= producto.precio %>
-                                </p>
-                                <button class="btn-add"
-                                    onclick="agregarAlCarrito(<%= producto.id %>, '<%= producto.nombre %>', <%= producto.precio %>)">Agregar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <% }); %>
-                        <% } else { %>
-                            <div class="card">
-                                <p>No hay productos disponibles</p>
-                            </div>
-                            <% } %>
-        </div>
-
+    <div class="container-carrito">
         <div class="card carrito-resumen">
-            <h3>Resumen del Carrito</h3>
-            <div id="carrito-items"></div>
-            <button class="btn-blue" onclick="vaciarCarrito()">Vaciar Carrito</button>
-            <p><b>Total:</b></p>
-            <p id="total">$0.00</p>
-            <br>
-            <a href="#" onclick="procederAlPago(event)" class="btn-green">Proceder al Pago</a>
+            <h2>Resumen del Carrito</h2>
+            <div id="carrito-items" class="items-list"></div>
+            <div class="carrito-footer">
+                <button class="btn-blue" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                <div class="total-section">
+                    <p class="total-label"><b>Total:</b></p>
+                    <p id="total" class="total-amount">$0.00</p>
+                </div>
+                <a href="#" onclick="procederAlPago(event)" class="btn-green">Proceder al Pago</a>
+            </div>
         </div>
     </div>
 
@@ -76,7 +48,8 @@
             }));
         <% } %>
 
-            let carrito = [];
+        // Cargar carrito desde localStorage
+        let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
 
         function agregarAlCarrito(id, nombre, precio) {
             // Verificar si el usuario está autenticado
@@ -93,12 +66,18 @@
             } else {
                 carrito.push({ id, nombre, precio, cantidad: 1 });
             }
+            // Guardar en localStorage
+            localStorage.setItem('carrito', JSON.stringify(carrito));
             actualizarCarrito();
+            actualizarIconoCarrito();
         }
 
         function vaciarCarrito() {
             carrito = [];
+            // Limpiar localStorage
+            localStorage.removeItem('carrito');
             actualizarCarrito();
+            actualizarIconoCarrito();
         }
 
         function actualizarCarrito() {
@@ -108,15 +87,19 @@
             carritoItems.innerHTML = '';
             let total = 0;
 
-            carrito.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'carrito-item';
-                itemDiv.innerHTML = `
-                    <p>${item.nombre} x${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}</p>
-                `;
-                carritoItems.appendChild(itemDiv);
-                total += item.precio * item.cantidad;
-            });
+            if (carrito.length === 0) {
+                carritoItems.innerHTML = '<p style="text-align: center; color: #666;">Tu carrito está vacío</p>';
+            } else {
+                carrito.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'carrito-item';
+                    itemDiv.innerHTML = `
+                        <p><strong>${item.nombre}</strong> x${item.cantidad} - <span style="color: #0084ff;">$${(item.precio * item.cantidad).toFixed(2)}</span></p>
+                    `;
+                    carritoItems.appendChild(itemDiv);
+                    total += item.precio * item.cantidad;
+                });
+            }
 
             totalElement.textContent = `$${total.toFixed(2)}`;
         }
@@ -141,6 +124,29 @@
             alert('Compra realizada con éxito por un total de $' + document.getElementById('total').textContent);
             vaciarCarrito();
         }
+
+        // Función para actualizar el ícono del carrito
+        function actualizarIconoCarrito() {
+            const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const cartIcon = document.getElementById('cart-icon');
+            
+            if (cartIcon) {
+                if (totalItems > 0) {
+                    cartIcon.src = '/img/carritolleno.png';
+                    cartIcon.alt = 'Carrito Cargado';
+                } else {
+                    cartIcon.src = '/img/Carritoicono.png';
+                    cartIcon.alt = 'Carrito Vacío';
+                }
+            }
+        }
+
+        // Actualizar ícono y carrito al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            actualizarCarrito();
+            actualizarIconoCarrito();
+        });
 
     </script>
 
