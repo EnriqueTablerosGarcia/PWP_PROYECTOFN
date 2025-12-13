@@ -11,11 +11,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = mysql.createPool({
-    
-    host : 'localhost',
-    user : 'root',
-    password : 'Karl!2008',
-    database : 'carrito_db',
+
+    host: 'localhost',
+    user: 'root',
+    password: 'kenai123',
+    database: 'carrito_db',
 
     //connectionLimit : 10,
     //acquireTimeout : 30000,
@@ -23,10 +23,10 @@ const config = mysql.createPool({
 });
 
 config.getConnection((err, connection) => {
-    if(err){
+    if (err) {
         console.log('Error de conexion a la base de datos', err);
         return;
-    }   
+    }
     console.log('Conexion exitosa a la base de datos');
     connection.release();
 });

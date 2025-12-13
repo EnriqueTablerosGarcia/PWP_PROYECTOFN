@@ -17,6 +17,17 @@ router.get('/crearCuenta', (req, res) => {
     res.render('crearCuenta', { error: null });
 });
 
+// Ruta para ver productos sin autenticación
+router.get('/productos', (req, res) => {
+    config.query("SELECT * FROM productos", (err, productos) => {
+        if (err) {
+            console.error(err);
+            return res.render('productos', { productos: [], isAuthenticated: false });
+        }
+        res.render('productos', { productos: productos, isAuthenticated: false });
+    });
+});
+
 router.get('/carrito', (req, res) => {
     config.query("SELECT * FROM productos", (err, productos) => {
         if (err) {
@@ -89,7 +100,7 @@ router.post('/login', (req, res) => {
             // Login exitoso
             console.log('Login exitoso para:', email);
             const usuarioData = { nombre: usuario.nombre, email: usuario.email, id: usuario.id };
-            
+
             config.query("SELECT * FROM productos", (err, productos) => {
                 if (err) {
                     console.error(err);

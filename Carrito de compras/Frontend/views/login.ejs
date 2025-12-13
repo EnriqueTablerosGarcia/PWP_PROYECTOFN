@@ -11,8 +11,8 @@
 <body>
     <div class="container">
         <h2>Iniciar Sesión</h2>
-        
-        <% if (typeof error !== 'undefined' && error) { %>
+
+        <% if (typeof error !=='undefined' && error) { %>
             <div class="alert alert-error">
                 <%= error %>
             </div>
@@ -22,22 +22,27 @@
                 localStorage.removeItem('carritoActual');
                 localStorage.removeItem('totalActual');
             </script>
-        <% } %>
-        
-        <% if (typeof success !== 'undefined' && success) { %>
-            <div class="alert alert-success">
-                <%= success %>
-            </div>
-        <% } %>
-        
-        <form action="login" method="post">
-            <input type="email" name="email" placeholder="Correo" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Entrar</button>
-        </form>
-        <div class="crear-cuenta">
-            ¿No tienes cuenta? <a href="crearCuenta">Crear cuenta</a>
-        </div>
+            <% } %>
+
+                <% if (typeof success !=='undefined' && success) { %>
+                    <div class="alert alert-success">
+                        <%= success %>
+                    </div>
+                    <% } %>
+
+                        <form action="login" method="post">
+                            <input type="email" name="email" placeholder="Correo" required>
+                            <input type="password" name="password" placeholder="Contraseña" required>
+                            <button type="submit">Entrar</button>
+                        </form>
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a href="/productos" class="btn-ver-productos"
+                                style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Ver
+                                Productos</a>
+                        </div>
+                        <div class="crear-cuenta">
+                            ¿No tienes cuenta? <a href="crearCuenta">Crear cuenta</a>
+                        </div>
     </div>
 </body>
 

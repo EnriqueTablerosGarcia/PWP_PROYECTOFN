@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Carrito de Compras</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <div class="topbar">
+        <div class="icon-left">
+            <a href="/login" class="cart-container">
+                <img src="../img/Carritodcompras.png" alt="Carrito" class="cart-icon">
+                <div class="cart-tooltip">Inicia sesión para ver tu carrito</div>
+            </a>
+        </div>
+        <div class="topbar-center">
+            <a href="/principal" class="btn-inicio">Inicio</a>
+        </div>
+        <a class="user-circle" href="/login" title="Iniciar sesión">U</a>
+    </div>
+
+    <h1><b>Carrito de Compras de Quesos Mini Babybel</b></h1>
+
+    <div class="container">
+        <div class="productos-container">
+            <% if (productos && productos.length> 0) { %>
+                <% productos.forEach(function(producto) { %>
+                    <div class="card">
+                        <div class="product">
+                            <img src="../img/<%= producto.imagen %>" alt="<%= producto.nombre %>"
+                                onerror="this.src='../img/default-cheese.png'">
+                            <div>
+                                <p><strong>
+                                        <%= producto.nombre %>
+                                    </strong></p>
+                                <p>
+                                    <%= producto.descripcion %>
+                                </p>
+                                <p class="precio">$<%= producto.precio %>
+                                </p>
+                                <button class="btn-add" onclick="redirigirLogin()">Iniciar sesión para comprar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="card">
+                                <p>No hay productos disponibles</p>
+                            </div>
+                            <% } %>
+        </div>
+
+        <div class="card carrito-resumen">
+            <h3>Inicia sesión para comprar</h3>
+            <p style="text-align: center; padding: 20px;">
+                Para agregar productos al carrito y realizar compras, debes iniciar sesión.
+            </p>
+            <a href="/login" class="btn-green" style="display: block; text-align: center;">Iniciar Sesión</a>
+            <br>
+            <a href="/crearCuenta" class="btn-blue" style="display: block; text-align: center;">Crear Cuenta</a>
+        </div>
+    </div>
+
+    <script>
+        function redirigirLogin() {
+            alert('Debes iniciar sesión para agregar productos al carrito');
+            window.location.href = '/login';
+        }
+    </script>
+
+    <div style="text-align: center; padding: 30px 0; margin-bottom: 20px;">
+        <a href="/principal" class="btn-principal">Regresar a la página principal</a>
+    </div>
+</body>
+
+</html>

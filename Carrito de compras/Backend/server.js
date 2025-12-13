@@ -6,7 +6,7 @@ import productroutes from './routes/productroutes.js';
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;  
+const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,4 +33,5 @@ app.use('/', productroutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log('http://localhost:3000')
 });
