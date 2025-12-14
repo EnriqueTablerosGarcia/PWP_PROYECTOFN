@@ -11,7 +11,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="#" class="cart-container" onclick="verificarSesionCarrito(event)">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -19,7 +19,7 @@
             <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
         </div>
         <div class="topbar-right">
-            <a href="/login" id="link-login">Iniciar sesión</a>
+            <a href="/login" id="link-login">Iniciar sesión  </a>
             <a href="/crearCuenta" id="link-crear">Crear cuenta</a>
         </div>
     </div>
@@ -45,8 +45,8 @@
                     </div>
                     <% } %>
 
-                        <form action="login" method="post">
-                            <input type="email" name="email" placeholder="Correo" required>
+                        <form action="login" method="post" id="loginForm">
+                            <input type="email" name="email" id="emailLogin" placeholder="Correo (@gmail, @hotmail)" required>
                             <input type="password" name="password" placeholder="Contraseña" required>
                             <button type="submit">Entrar</button>
                         </form>
@@ -59,6 +59,32 @@
                             ¿No tienes cuenta? <a href="crearCuenta">Crear cuenta</a>
                         </div>
     </div>
+
+    <script>
+        function verificarSesionCarrito(event) {
+            event.preventDefault();
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                return;
+            }
+            
+            window.location.href = '/carrito';
+        }
+
+        // Validar correo al enviar el formulario de login
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const email = document.getElementById('emailLogin').value;
+            const emailPattern = /^[a-zA-Z0-9._-]+@(gmail\.com|hotmail\.com)$/;
+            
+            if (!emailPattern.test(email)) {
+                event.preventDefault();
+                alert('❌ Solo se permiten correos de @gmail.com o @hotmail.com');
+                return false;
+            }
+        });
+    </script>
 </body>
 
 </html>

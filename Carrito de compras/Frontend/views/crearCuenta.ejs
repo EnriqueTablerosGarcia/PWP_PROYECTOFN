@@ -11,7 +11,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="#" class="cart-container" onclick="verificarSesionCarrito(event)">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -33,16 +33,47 @@
             </div>
         <% } %>
         
-        <form action="/register" method="post">
+        <form action="/register" method="post" id="registerForm">
             <input type="text" name="nombre" placeholder="Nombre completo" required>
-            <input type="email" name="correo" placeholder="Correo electrónico" required>
+            <input type="email" name="correo" id="emailRegister" placeholder="Correo electrónico (@gmail, @hotmail)" required>
             <input type="password" name="password" placeholder="Contraseña" required>
             <button type="submit">Registrarse</button>
         </form>
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="/principal" class="btn-ver-productos"
+                style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Ver
+                Productos</a>
+        </div>
         <div class="crear-cuenta">
             ¿Ya tienes cuenta? <a href="login">Inicia sesión</a>
         </div>
     </div>
+
+    <script>
+        function verificarSesionCarrito(event) {
+            event.preventDefault();
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                return;
+            }
+            
+            window.location.href = '/carrito';
+        }
+
+        // Validar correo al enviar el formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            const email = document.getElementById('emailRegister').value;
+            const emailPattern = /^[a-zA-Z0-9._-]+@(gmail\.com|hotmail\.com)$/;
+            
+            if (!emailPattern.test(email)) {
+                event.preventDefault();
+                alert('❌ Solo se permiten correos de @gmail.com o @hotmail.com');
+                return false;
+            }
+        });
+    </script>
 </body>
 
 </html>

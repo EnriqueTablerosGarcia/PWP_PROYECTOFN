@@ -9,7 +9,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="#" class="cart-container" onclick="verificarSesionCarrito(event)">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -91,9 +91,14 @@
             localStorage.removeItem('usuarioId');
             localStorage.removeItem('carrito');
             
-            // Redirigir al login
+            // Redirigir al login y prevenir regreso
             alert('Sesión cerrada exitosamente. Tu carrito se ha guardado.');
-            window.location.href = '/principal';
+            window.location.replace('/principal');
+            // Prevenir navegación hacia atrás
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.go(1);
+            };
         }
 
         function eliminarCuenta() {
@@ -103,35 +108,58 @@
                 return;
             }
 
-            if (confirm('¿Seguro de que quieres borrar tu cuenta? Esta acción no se puede deshacer.')) {
-                // Enviar solicitud para eliminar cuenta
-                fetch('/eliminar-cuenta', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: usuario.id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Limpiar localStorage
-                        localStorage.removeItem('usuario');
-                        localStorage.removeItem('carritoActual');
-                        localStorage.removeItem('totalActual');
-                        localStorage.removeItem('carritoComprado');
-                        localStorage.removeItem('totalCompra');
-                        
-                        alert('Cuenta eliminada exitosamente');
-                        window.location.href = '/login';
-                    } else {
-                        alert('Error al eliminar la cuenta: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al eliminar la cuenta');
-                });
+            // Primera confirmación
+            if (confirm('⚠️ ¿Estás seguro de que quieres eliminar tu cuenta?\n\nEsta acción eliminará permanentemente:\n• Tus datos personales\n• Tu historial de compras\n• Tu carrito guardado\n\n¿Deseas continuar?')) {
+                // Segunda confirmación
+                if (confirm('🚨 ÚLTIMA CONFIRMACIÓN\n\n¿Realmente deseas eliminar tu cuenta de forma PERMANENTE?\n\nEsta acción NO SE PUEDE DESHACER.')) {
+                    // Guardar carrito actual antes de eliminar
+                    const usuarioId = usuario.id;
+                    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+                    localStorage.setItem(`carrito_usuario_${usuarioId}`, JSON.stringify(carrito));
+
+                    // Enviar solicitud para eliminar cuenta
+                    fetch('/eliminar-cuenta', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: usuario.id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Limpiar localStorage de sesión actual
+                            localStorage.removeItem('usuario');
+                            localStorage.removeItem('usuarioNombre');
+                            localStorage.removeItem('usuarioEmail');
+                            localStorage.removeItem('usuarioId');
+                            localStorage.removeItem('carrito');
+                            localStorage.removeItem('carritoActual');
+                            localStorage.removeItem('totalActual');
+                            localStorage.removeItem('carritoComprado');
+                            localStorage.removeItem('totalCompra');
+                            localStorage.removeItem(`carrito_usuario_${usuarioId}`);
+                            
+                            alert('✓ Tu cuenta ha sido eliminada exitosamente.\n\nTodos tus datos han sido borrados del sistema.');
+                            window.location.replace('/principal');
+                            // Prevenir navegación hacia atrás
+                            history.pushState(null, null, location.href);
+                            window.onpopstate = function() {
+                                history.go(1);
+                            };
+                        } else {
+                            alert('❌ Error al eliminar la cuenta: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('❌ Error al eliminar la cuenta. Por favor intenta de nuevo.');
+                    });
+                } else {
+                    alert('Eliminación de cuenta cancelada. Tu cuenta se mantiene activa.');
+                }
+            } else {
+                alert('Eliminación de cuenta cancelada.');
             }
         }
 
@@ -150,6 +178,19 @@
                     cartIcon.alt = 'Carrito Vacío';
                 }
             }
+        }
+
+        // Función para verificar sesión antes de ir al carrito
+        function verificarSesionCarrito(event) {
+            event.preventDefault();
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                return;
+            }
+            
+            window.location.href = '/carrito';
         }
 
         // Actualizar ícono al cargar la página

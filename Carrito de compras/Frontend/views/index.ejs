@@ -11,7 +11,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="#" class="cart-container" onclick="verificarSesionCarrito(event)">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -70,8 +70,16 @@
             } else {
                 carrito.push({ id, nombre, precio, cantidad: 1 });
             }
+            
             // Guardar en localStorage
             localStorage.setItem('carrito', JSON.stringify(carrito));
+            
+            // Guardar también en el carrito específico del usuario
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (usuarioId) {
+                localStorage.setItem(`carrito_usuario_${usuarioId}`, JSON.stringify(carrito));
+            }
+            
             actualizarCarrito();
             actualizarIconoCarrito();
         }
@@ -79,7 +87,14 @@
         function vaciarCarrito() {
             carrito = [];
             // Limpiar localStorage
-            localStorage.removeItem('carrito');
+            localStorage.setItem('carrito', JSON.stringify([]));
+            
+            // Guardar el carrito vacío para el usuario actual
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (usuarioId) {
+                localStorage.setItem(`carrito_usuario_${usuarioId}`, JSON.stringify([]));
+            }
+            
             actualizarCarrito();
             actualizarIconoCarrito();
         }
@@ -146,8 +161,47 @@
             }
         }
 
+        // Función para verificar sesión antes de ir al carrito
+        function verificarSesionCarrito(event) {
+            event.preventDefault();
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                window.location.href = '/principal';
+                return;
+            }
+            
+            window.location.href = '/carrito';
+        }
+
         // Actualizar ícono y carrito al cargar la página
         window.addEventListener('DOMContentLoaded', function() {
+            // Verificar que haya sesión iniciada
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                window.location.href = '/principal';
+                return;
+            }
+
+            // Actualizar topbar según sesión
+            const linkLogin = document.getElementById('link-login');
+            const linkCrear = document.getElementById('link-crear');
+            const linkUsuario = document.getElementById('link-usuario');
+
+            if (usuarioNombre) {
+                // Si hay sesión, ocultar botones de login/crear y mostrar usuario
+                if (linkLogin) linkLogin.style.display = 'none';
+                if (linkCrear) linkCrear.style.display = 'none';
+                if (linkUsuario) linkUsuario.style.display = 'inline-flex';
+            } else {
+                // Si no hay sesión, mostrar botones de login/crear y ocultar usuario
+                if (linkLogin) linkLogin.style.display = 'inline-block';
+                if (linkCrear) linkCrear.style.display = 'inline-block';
+                if (linkUsuario) linkUsuario.style.display = 'none';
+            }
+
             actualizarCarrito();
             actualizarIconoCarrito();
         });

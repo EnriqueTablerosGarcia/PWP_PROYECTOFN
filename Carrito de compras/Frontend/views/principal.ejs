@@ -9,7 +9,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="#" class="cart-container" onclick="verificarSesionCarrito(event)">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -70,6 +70,19 @@
     </div>
 
     <script>
+        // Función para verificar sesión antes de ir al carrito
+        function verificarSesionCarrito(event) {
+            event.preventDefault();
+            const usuarioNombre = localStorage.getItem('usuarioNombre');
+            
+            if (!usuarioNombre) {
+                alert('Primero tienes que iniciar sesión para ver el carrito');
+                return;
+            }
+            
+            window.location.href = '/carrito';
+        }
+
         // Función para actualizar el ícono del carrito
         function actualizarIconoCarrito() {
             const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
