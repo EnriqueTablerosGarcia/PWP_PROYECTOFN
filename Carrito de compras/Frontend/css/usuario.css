@@ -30,9 +30,9 @@ body {
 */
 
 .topbar-center {
+    justify-content: center;
     display: flex;
     align-items: center;
-    justify-content: center;
     flex: 1;
 }
 
@@ -248,14 +248,3 @@ a:hover {
     height: 40px;
 }
 
-.user-circle {
-    width: 40px;
-    height: 40px;
-    background-color: #4ade80;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: #000;
-}
