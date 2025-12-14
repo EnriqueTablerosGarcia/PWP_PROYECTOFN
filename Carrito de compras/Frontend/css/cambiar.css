@@ -70,8 +70,8 @@ a:hover {
 
 .topbar {
     width: 100%;
-    background-color: #0084ff;
-    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,21 +80,95 @@ a:hover {
     top: 0;
     left: 0;
     z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-.icon-left img {
-    width: 40px;
-    height: 40px;
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.topbar-left {
+    justify-content: flex-start;
+}
+
+.topbar-center {
+    justify-content: center;
+}
+
+.topbar-right {
+    justify-content: flex-end;
+}
+
+.cart-container {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.cart-container:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.cart-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.cart-container:hover .cart-icon {
+    transform: scale(1.1);
+}
+
+.brand-title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+}
+
+.brand-title:hover {
+    transform: scale(1.05);
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .user-circle {
-    width: 40px;
-    height: 40px;
-    background-color: #4ade80;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    color: #000;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    line-height: 45px;
+    text-align: center;
+}
+
+.user-circle:hover {
+    background-color: white;
+    color: #764ba2;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }

@@ -8,15 +8,17 @@
 </head>
 <body>
     <div class="topbar">
-        <div class="icon-left">
-            <a href="/carrito">
-                <img src="../img/Carritodcompras.png" alt="Carrito">
+        <div class="topbar-left">
+            <a href="/carrito" class="cart-container">
+                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
         <div class="topbar-center">
-            <a href="/carrito" class="btn-inicio">Inicio</a>
+            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
         </div>
-        <a class="user-circle" href="/usuario">U</a>
+        <div class="topbar-right">
+            <a href="/usuario" class="user-circle">U</a>
+        </div>
     </div>
 
     <div class="container" style="margin-top: 80px;">
@@ -29,7 +31,7 @@
         </div>
 
         <button onclick="confirmarCompra()" class="button btn-comprar">Comprar</button>
-        <a href="/carrito" class="button btn-regresar">Regresar</a>
+        <a href="/principal" class="button btn-regresar">Regresar</a>
     </div>
 
     <script>

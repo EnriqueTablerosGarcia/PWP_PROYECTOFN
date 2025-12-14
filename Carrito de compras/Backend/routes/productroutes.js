@@ -43,8 +43,8 @@ router.get('/ticket', (req, res) => {
 });
 
 router.get('/usuario', (req, res) => {
-    // Por ahora mostrar datos por defecto, se necesitaría implementar sesiones
-    res.render('usuario', { user: { nombre: 'Usuario', email: 'usuario@gmail.com' } });
+    // La información del usuario se cargará desde localStorage en el cliente
+    res.render('usuario', { user: undefined });
 });
 
 router.get('/cambContra', (req, res) => {
@@ -104,9 +104,24 @@ router.post('/login', (req, res) => {
             // Redirigir a la página principal después del login exitoso
             res.send(`
                 <script>
+                    const usuarioId = '${usuario.id}';
+                    
+                    // Guardar datos del usuario
+                    localStorage.setItem('usuario', JSON.stringify({
+                        nombre: '${usuario.nombre}',
+                        email: '${usuario.email}',
+                        id: usuarioId
+                    }));
                     localStorage.setItem('usuarioNombre', '${usuario.nombre}');
                     localStorage.setItem('usuarioEmail', '${usuario.email}');
-                    localStorage.setItem('usuarioId', '${usuario.id}');
+                    localStorage.setItem('usuarioId', usuarioId);
+                    
+                    // Recuperar el carrito guardado del usuario
+                    const carritoGuardado = localStorage.getItem('carrito_usuario_' + usuarioId);
+                    if (carritoGuardado) {
+                        localStorage.setItem('carrito', carritoGuardado);
+                    }
+                    
                     window.location.href = '/principal';
                 </script>
             `);

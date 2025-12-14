@@ -8,12 +8,17 @@
 </head>
 <body>
     <div class="topbar">
-        <div class="icon-left">
-
-            <img src="../img/Carritodcompras.png" alt="Carrito">
+        <div class="topbar-left">
+            <a href="/carrito" class="cart-container">
+                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
+            </a>
         </div>
-
-        
+        <div class="topbar-center">
+            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
+        </div>
+        <div class="topbar-right">
+            <a href="/principal" class="user-circle">U</a>
+        </div>
     </div>
 
     <div class="contenedor">
@@ -31,28 +36,63 @@
 
         <a href="/cambContra">Cambiar Contraseña</a>
         <a href="/cambCorreo">Cambiar Correo</a>
-        <a href="/carrito">Regresar</a>
+        <a href="/principal">Regresar</a>
         <button onclick="cerrarSesion()" class="btn-cerrar-sesion">Cerrar Sesión</button>
         <button onclick="eliminarCuenta()" class="btn-eliminar">Eliminar Cuenta</button>
     </div>
 
     <script>
         // Cargar datos del usuario desde localStorage
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-        if (usuario) {
-            document.querySelectorAll('.cuadro')[0].textContent = usuario.nombre;
-            document.querySelectorAll('.cuadro')[1].textContent = usuario.email;
-        }
+        window.addEventListener('DOMContentLoaded', function() {
+            // Primero intentar con datos del servidor
+            const usuarioServidor = {
+                nombre: '<%= typeof user !== "undefined" ? user.nombre : "" %>',
+                email: '<%= typeof user !== "undefined" ? user.email : "" %>',
+                id: '<%= typeof user !== "undefined" ? user.id : "" %>'
+            };
+
+            // Si hay datos del servidor, actualizar localStorage
+            if (usuarioServidor.nombre && usuarioServidor.email) {
+                localStorage.setItem('usuario', JSON.stringify(usuarioServidor));
+                localStorage.setItem('usuarioNombre', usuarioServidor.nombre);
+                localStorage.setItem('usuarioEmail', usuarioServidor.email);
+                localStorage.setItem('usuarioId', usuarioServidor.id);
+                
+                document.querySelectorAll('.cuadro')[0].textContent = usuarioServidor.nombre;
+                document.querySelectorAll('.cuadro')[1].textContent = usuarioServidor.email;
+            } else {
+                // Si no hay datos del servidor, usar localStorage
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                if (usuario) {
+                    document.querySelectorAll('.cuadro')[0].textContent = usuario.nombre;
+                    document.querySelectorAll('.cuadro')[1].textContent = usuario.email;
+                } else {
+                    // Si no hay datos en ningún lado, redirigir al login
+                    window.location.href = '/login';
+                }
+            }
+        });
 
         function cerrarSesion() {
+            // Obtener datos del usuario actual
+            const usuario = JSON.parse(localStorage.getItem('usuario'));
+            const usuarioId = usuario ? usuario.id : localStorage.getItem('usuarioId');
+            
+            // Guardar el carrito actual asociado al usuario
+            const carritoActual = localStorage.getItem('carrito');
+            if (carritoActual && usuarioId) {
+                localStorage.setItem(`carrito_usuario_${usuarioId}`, carritoActual);
+            }
+            
             // Limpiar datos de sesión
             localStorage.removeItem('usuario');
             localStorage.removeItem('usuarioNombre');
             localStorage.removeItem('usuarioEmail');
             localStorage.removeItem('usuarioId');
+            localStorage.removeItem('carrito');
             
             // Redirigir al login
-            alert('Sesión cerrada exitosamente');
+            alert('Sesión cerrada exitosamente. Tu carrito se ha guardado.');
             window.location.href = '/principal';
         }
 
@@ -94,6 +134,28 @@
                 });
             }
         }
+
+        // Función para actualizar el ícono del carrito
+        function actualizarIconoCarrito() {
+            const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const cartIcon = document.getElementById('cart-icon');
+            
+            if (cartIcon) {
+                if (totalItems > 0) {
+                    cartIcon.src = '/img/carritolleno.png';
+                    cartIcon.alt = 'Carrito Cargado';
+                } else {
+                    cartIcon.src = '/img/Carritoicono.png';
+                    cartIcon.alt = 'Carrito Vacío';
+                }
+            }
+        }
+
+        // Actualizar ícono al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            actualizarIconoCarrito();
+        });
     </script>
 </body>
 </html>
