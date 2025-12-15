@@ -130,13 +130,16 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-    const { nombre, correo, password } = req.body;
+    const { correo, password } = req.body;
 
-    console.log('Intento de registro:', nombre, correo);
+    console.log('Intento de registro:', correo);
 
-    if (!nombre || !correo || !password) {
+    if (!correo || !password) {
         return res.render('crearCuenta', { error: "Por favor completa todos los campos" });
     }
+
+    // Usar el correo como nombre (sin el dominio)
+    const nombre = correo.split('@')[0];
 
     config.query(
         "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)",

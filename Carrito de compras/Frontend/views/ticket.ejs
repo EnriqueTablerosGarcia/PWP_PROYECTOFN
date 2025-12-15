@@ -34,73 +34,8 @@
         <a href="/principal" class="button btn-regresar">Regresar</a>
     </div>
 
-    <script>
-        // Obtener datos del carrito
-        const carritoActual = JSON.parse(localStorage.getItem('carritoActual') || '[]');
-        const totalActual = localStorage.getItem('totalActual') || '0.00';
+    <script src="/js/carrito-utils.js"></script>
+    <script src="/js/ticket-page.js"></script>
 
-        // Mostrar productos en el ticket
-        const productosTicket = document.getElementById('productos-ticket');
-        const totalTicket = document.getElementById('total-ticket');
-
-        if (carritoActual.length > 0) {
-            carritoActual.forEach(item => {
-                const productoBox = document.createElement('div');
-                productoBox.className = 'info-box';
-                productoBox.innerHTML = `
-                    <div class="section-title">Producto:</div>
-                    <div class="producto-item">
-                        <img src="../img/babybel-${item.nombre.toLowerCase().includes('gouda') ? 'gouda' : item.nombre.toLowerCase().includes('mozzarella') ? 'mozzarella' : 'original'}.png" 
-                             alt="${item.nombre}" 
-                             class="producto-img"
-                             onerror="this.src='../img/default-cheese.png'">
-                        <div>
-                            <p class="producto-nombre">${item.nombre}</p>
-                            <p>Cantidad: ${item.cantidad}</p>
-                            <p>Precio unitario: $${item.precio.toFixed(2)}</p>
-                            <p><strong>Subtotal: $${(item.precio * item.cantidad).toFixed(2)}</strong></p>
-                        </div>
-                    </div>
-                `;
-                productosTicket.appendChild(productoBox);
-            });
-
-            totalTicket.textContent = totalActual;
-        } else {
-            productosTicket.innerHTML = '<div class="info-box"><p>No hay productos en el carrito</p></div>';
-        }
-
-        function confirmarCompra() {
-            if (carritoActual.length === 0) {
-                alert('No hay productos para comprar');
-                window.location.href = '/carrito';
-                return;
-            }
-
-            // Guardar datos para la página de confirmación
-            localStorage.setItem('carritoComprado', JSON.stringify(carritoActual));
-            localStorage.setItem('totalCompra', totalActual);
-            
-            // Limpiar carrito actual
-            localStorage.removeItem('carritoActual');
-            localStorage.removeItem('totalActual');
-
-            // Redireccionar a confirmación
-            window.location.href = '/confirmacion';
-        }
-
-        // Función para verificar sesión antes de ir al carrito
-        function verificarSesionCarrito(event) {
-            event.preventDefault();
-            const usuarioNombre = localStorage.getItem('usuarioNombre');
-            
-            if (!usuarioNombre) {
-                alert('Primero tienes que iniciar sesión para ver el carrito');
-                return;
-            }
-            
-            window.location.href = '/carrito';
-        }
-    </script>
 </body>
 </html>

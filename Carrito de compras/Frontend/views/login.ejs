@@ -19,7 +19,7 @@
             <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
         </div>
         <div class="topbar-right">
-            <a href="/login" id="link-login">Iniciar sesión  </a>
+            <a href="/login" id="link-login">Iniciar sesión   </a>
             <a href="/crearCuenta" id="link-crear">Crear cuenta</a>
         </div>
     </div>
@@ -60,31 +60,8 @@
                         </div>
     </div>
 
-    <script>
-        function verificarSesionCarrito(event) {
-            event.preventDefault();
-            const usuarioNombre = localStorage.getItem('usuarioNombre');
-            
-            if (!usuarioNombre) {
-                alert('Primero tienes que iniciar sesión para ver el carrito');
-                return;
-            }
-            
-            window.location.href = '/carrito';
-        }
-
-        // Validar correo al enviar el formulario de login
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            const email = document.getElementById('emailLogin').value;
-            const emailPattern = /^[a-zA-Z0-9._-]+@(gmail\.com|hotmail\.com)$/;
-            
-            if (!emailPattern.test(email)) {
-                event.preventDefault();
-                alert('❌ Solo se permiten correos de @gmail.com o @hotmail.com');
-                return false;
-            }
-        });
-    </script>
+    <script src="/js/carrito-utils.js"></script>
+    <script src="/js/auth-validation.js"></script>
 </body>
 
 </html>

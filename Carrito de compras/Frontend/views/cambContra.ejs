@@ -48,18 +48,6 @@
         <a href="/usuario" class="btn">Regresar</a>
     </div>
 
-    <script>
-        function verificarSesionCarrito(event) {
-            event.preventDefault();
-            const usuarioNombre = localStorage.getItem('usuarioNombre');
-            
-            if (!usuarioNombre) {
-                alert('Primero tienes que iniciar sesión para ver el carrito');
-                return;
-            }
-            
-            window.location.href = '/carrito';
-        }
-    </script>
+    <script src="/js/session-check.js"></script>
 </body>
 </html>

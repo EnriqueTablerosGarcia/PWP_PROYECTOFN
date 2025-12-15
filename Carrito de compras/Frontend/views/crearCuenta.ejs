@@ -34,7 +34,6 @@
         <% } %>
         
         <form action="/register" method="post" id="registerForm">
-            <input type="text" name="nombre" placeholder="Nombre completo" required>
             <input type="email" name="correo" id="emailRegister" placeholder="Correo electrónico (@gmail, @hotmail)" required>
             <input type="password" name="password" placeholder="Contraseña" required>
             <button type="submit">Registrarse</button>
@@ -49,31 +48,8 @@
         </div>
     </div>
 
-    <script>
-        function verificarSesionCarrito(event) {
-            event.preventDefault();
-            const usuarioNombre = localStorage.getItem('usuarioNombre');
-            
-            if (!usuarioNombre) {
-                alert('Primero tienes que iniciar sesión para ver el carrito');
-                return;
-            }
-            
-            window.location.href = '/carrito';
-        }
-
-        // Validar correo al enviar el formulario de registro
-        document.getElementById('registerForm').addEventListener('submit', function(event) {
-            const email = document.getElementById('emailRegister').value;
-            const emailPattern = /^[a-zA-Z0-9._-]+@(gmail\.com|hotmail\.com)$/;
-            
-            if (!emailPattern.test(email)) {
-                event.preventDefault();
-                alert('❌ Solo se permiten correos de @gmail.com o @hotmail.com');
-                return false;
-            }
-        });
-    </script>
+    <script src="/js/carrito-utils.js"></script>
+    <script src="/js/auth-validation.js"></script>
 </body>
 
 </html>
