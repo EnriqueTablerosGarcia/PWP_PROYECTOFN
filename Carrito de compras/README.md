@@ -1,13 +1,13 @@
-# Carrito de Compras - Mini Babybel
+# V 1.0 ARRANCAR SERVER CON npm start  Carrito de Compras - Mini Babybel jeje
 
 ## Configuración
 
-### 1. Instalar dependencias
+### 1. Instalar dependencias d favor
 ```bash
 npm install
 ```
 
-### 2. Configurar MySQL
+### 2. Configurar MySQL, x siempre
 Asegúrate de tener MySQL instalado y corriendo. Si tienes XAMPP o WAMP, inicia el servidor MySQL.
 
 ### 3. Configurar archivo .env
@@ -15,11 +15,11 @@ Edita el archivo `.env` con tus credenciales de MySQL:
 ```
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=       (déjalo vacío si no tienes contraseña en MySQL)
+DB_PASSWORD="      " (déjalo vacío si no tienes contraseña en MySQL)
 DB_NAME=carrito_db
 ```
 
-**IMPORTANTE**: Si MySQL requiere contraseña, agrégala después de `DB_PASSWORD=`
+
 
 ### 4. Opción A - Inicializar con script automático
 ```bash
@@ -54,4 +54,3 @@ El servidor estará disponible en: http://localhost:3000
 ### Error de conexión MySQL
 - Verifica que MySQL esté corriendo
 - Verifica usuario y contraseña en el archivo .env
-- Si usas XAMPP/WAMP, asegúrate de que Apache y MySQL estén iniciados

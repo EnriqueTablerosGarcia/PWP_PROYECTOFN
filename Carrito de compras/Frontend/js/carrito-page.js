@@ -75,7 +75,7 @@ function actualizarCarrito() {
 function procederAlPago(evento) {
     evento.preventDefault();
     if (carrito.length === 0) {
-        alert('El carrito está vacío. Agrega productos antes de proceder al pago.');
+        alert('El carrito está vacío, agrega productos antes de proceder al pago.');
         return;
     }
     localStorage.setItem('carritoActual', JSON.stringify(carrito));

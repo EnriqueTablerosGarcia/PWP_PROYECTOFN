@@ -38,7 +38,7 @@ function cerrarSesion() {
     localStorage.removeItem('usuarioId');
     localStorage.removeItem('carrito');
     
-    alert('Sesión cerrada exitosamente. Tu carrito se ha guardado.');
+    alert('Sesión cerrada exitosamente, tu carrito se ha guardado.');
     window.location.replace('/principal');
     
     // Prevenir navegación hacia atrás
@@ -91,7 +91,7 @@ function eliminarCuenta() {
                     localStorage.removeItem('totalCompra');
                     localStorage.removeItem(`carrito_usuario_${usuarioId}`);
                     
-                    alert('Tu cuenta ha sido eliminada exitosamente.\n\nTodos tus datos han sido borrados del sistema.');
+                    alert('Tu cuenta ha sido eliminada exitosamente,\n\ntodos tus datos han sido borrados del sistema.');
                     window.location.replace('/principal');
                     
                     // Prevenir navegación hacia atrás
@@ -105,10 +105,10 @@ function eliminarCuenta() {
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al eliminar la cuenta. Por favor intenta de nuevo.');
+                alert('Error al eliminar la cuenta, por favor intenta de nuevo.');
             });
         } else {
-            alert('Eliminación de cuenta cancelada. Tu cuenta se mantiene activa.');
+            alert('Eliminación de cuenta cancelada, tu cuenta se mantiene activa.');
         }
     } else {
         alert('Eliminación de cuenta cancelada.');
