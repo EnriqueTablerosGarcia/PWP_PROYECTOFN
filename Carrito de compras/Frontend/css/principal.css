@@ -280,6 +280,14 @@ h1 {
     border: 2px solid #0084ff;
     border-radius: 5px;
     outline: none;
+    -moz-appearance: textfield;
+}
+
+/* Ocultar flechas en Chrome, Safari, Edge, Opera */
+.cantidad-input::-webkit-outer-spin-button,
+.cantidad-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .cantidad-input:focus {
