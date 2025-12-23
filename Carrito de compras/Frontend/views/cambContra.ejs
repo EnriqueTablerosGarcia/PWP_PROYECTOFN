@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambiar Contraseña</title>
-    <link rel="stylesheet" href="../css/cambiar.css">
+    <link rel="stylesheet" href="/css/cambiar.css">
 </head>
 <body>
     <div class="topbar">
@@ -22,29 +22,105 @@
     <div class="contenedor">
         <h2>Cambiar Contraseña</h2>
 
+        <div id="mensaje" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 4px;"></div>
 
-        <div class="campo">
-            <label>Contraseña actual:</label>
-            <input type="password">
-        </div>
+        <form id="formCambiarContrasena" onsubmit="cambiarContrasena(event)">
+            <div class="campo">
+                <label>Contraseña actual:</label>
+                <input type="password" id="passwordActual" required>
+            </div>
 
+            <div class="campo">
+                <label>Nueva contraseña:</label>
+                <input type="password" id="passwordNueva" required>
+            </div>
 
-        <div class="campo">
-            <label>Nueva contraseña:</label>
-            <input type="password">
-        </div>
+            <div class="campo">
+                <label>Confirmar nueva contraseña:</label>
+                <input type="password" id="passwordConfirmar" required>
+            </div>
 
-
-        <div class="campo">
-            <label>Confirmar nueva contraseña:</label>
-            <input type="password">
-        </div>
-
-
-        <a href="/carrito" class="btn">Guardar</a>
-        <a href="/usuario" class="btn">Regresar</a>
+            <button type="submit" class="btn">Guardar</button>
+            <a href="/usuario" class="btn">Regresar</a>
+        </form>
     </div>
 
     <script src="/js/session-check.js"></script>
+    <script>
+        async function cambiarContrasena(event) {
+            event.preventDefault();
+            
+            const passwordActual = document.getElementById('passwordActual').value;
+            const passwordNueva = document.getElementById('passwordNueva').value;
+            const passwordConfirmar = document.getElementById('passwordConfirmar').value;
+            const mensaje = document.getElementById('mensaje');
+            
+            // Validar que las contraseñas coincidan
+            if (passwordNueva !== passwordConfirmar) {
+                mensaje.textContent = 'Las contraseñas no coinciden';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+                return;
+            }
+            
+            // Validar longitud mínima
+            if (passwordNueva.length < 6) {
+                mensaje.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+                return;
+            }
+            
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (!usuarioId) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/cambiar-contrasena', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usuarioId: parseInt(usuarioId),
+                        passwordActual: passwordActual,
+                        passwordNueva: passwordNueva
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    mensaje.textContent = data.message;
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.style.color = '#2e7d32';
+                    mensaje.style.display = 'block';
+                    
+                    // Limpiar formulario
+                    document.getElementById('formCambiarContrasena').reset();
+                    
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = '/usuario';
+                    }, 2000);
+                } else {
+                    mensaje.textContent = data.message;
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mensaje.textContent = 'Error al cambiar la contraseña';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

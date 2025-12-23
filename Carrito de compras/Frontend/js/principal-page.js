@@ -58,7 +58,8 @@ function configurarBotonesAgregar() {
     
     botones.forEach(boton => {
         boton.textContent = 'Agregar al Carrito';
-        boton.onclick = function() {
+        boton.onclick = async function() {
+            const productoId = parseInt(this.getAttribute('data-id'));
             const nombreProducto = this.getAttribute('data-producto');
             const precio = parseFloat(this.getAttribute('data-precio'));
             const stockDisponible = parseInt(this.getAttribute('data-stock'));
@@ -67,37 +68,55 @@ function configurarBotonesAgregar() {
             const inputCantidad = document.querySelector(`.cantidad-input[data-producto="${nombreProducto}"]`);
             const cantidadDeseada = parseInt(inputCantidad.value);
             
-            // Obtener carrito actual
-            let carrito = obtenerCarritoUsuario();
-            
-            // Verificar stock
-            const productoExistente = carrito.find(producto => producto.nombre === nombreProducto);
-            const cantidadEnCarrito = productoExistente ? productoExistente.cantidad : 0;
-            const cantidadTotal = cantidadEnCarrito + cantidadDeseada;
-            
-            if (cantidadTotal > stockDisponible) {
-                const disponible = stockDisponible - cantidadEnCarrito;
-                alert(`No hay suficiente stock. Solo puedes agregar ${disponible} unidades más. Stock disponible: ${stockDisponible}`);
+            // Obtener usuario ID
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (!usuarioId) {
+                alert('Debes iniciar sesión para agregar productos al carrito');
+                window.location.href = '/login';
                 return;
             }
             
-            // Agregar o actualizar producto
-            if (productoExistente) {
-                productoExistente.cantidad = cantidadTotal;
-            } else {
-                carrito.push({
-                    nombre: nombreProducto,
-                    precio: precio,
-                    cantidad: cantidadDeseada
+            try {
+                // Obtener carrito actual desde API
+                const carrito = await obtenerCarritoAPI();
+                
+                // Verificar stock
+                const productoExistente = carrito.find(p => p.id === productoId);
+                const cantidadEnCarrito = productoExistente ? productoExistente.cantidad : 0;
+                const cantidadTotal = cantidadEnCarrito + cantidadDeseada;
+                
+                if (cantidadTotal > stockDisponible) {
+                    const disponible = stockDisponible - cantidadEnCarrito;
+                    alert(`No hay suficiente stock. Solo puedes agregar ${disponible} unidades más. Stock disponible: ${stockDisponible}`);
+                    return;
+                }
+                
+                // Agregar al carrito mediante API
+                const response = await fetch('/api/carrito/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usuarioId: parseInt(usuarioId),
+                        productoId: productoId,
+                        cantidad: cantidadDeseada
+                    })
                 });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`${nombreProducto} agregado al carrito`);
+                    await actualizarIconoCarrito();
+                    inputCantidad.value = 1;
+                } else {
+                    alert('Error al agregar al carrito: ' + data.error);
+                }
+            } catch (error) {
+                console.error('[ERROR] Error al agregar al carrito:', error);
+                alert('Error al agregar al carrito');
             }
-            
-            // Guardar carrito
-            guardarCarritoUsuario(carrito);
-            actualizarIconoCarrito();
-            
-            // Resetear input
-            inputCantidad.value = 1;
         };
     });
 }

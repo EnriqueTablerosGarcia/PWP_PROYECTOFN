@@ -1,43 +1,97 @@
 // carrito-page.js
-// Lógica específica de la página del carrito (index.ejs)
+// Lógica específica de la página del carrito (index.ejs) - Versión con API
 
 let carrito = [];
 
 /**
- * Agrega un producto al carrito
+ * Cargar carrito desde la API
  */
-function agregarAlCarrito(id, nombre, precio) {
-    const usuario = localStorage.getItem('usuario');
-    if (!usuario) {
+async function cargarCarrito() {
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    carrito = await obtenerCarritoAPI();
+    actualizarCarrito();
+    await actualizarIconoCarrito();
+}
+
+/**
+ * Agrega un producto al carrito (DEPRECADO - usar API directamente desde principal-page)
+ */
+async function agregarAlCarrito(id, nombre, precio) {
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) {
         alert('Debes iniciar sesión para agregar productos al carrito');
         window.location.href = '/login';
         return;
     }
 
-    const producto = carrito.find(p => p.id === id);
-    if (producto) {
-        producto.cantidad++;
-    } else {
-        carrito.push({ id, nombre, precio, cantidad: 1 });
+    try {
+        const response = await fetch('/api/carrito/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                usuarioId: parseInt(usuarioId),
+                productoId: id,
+                cantidad: 1
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            await cargarCarrito();
+        } else {
+            alert('Error al agregar al carrito: ' + data.error);
+        }
+    } catch (error) {
+        console.error('[ERROR] Error al agregar al carrito:', error);
+        alert('Error al agregar al carrito');
     }
-    
-    guardarCarritoUsuario(carrito);
-    actualizarCarrito();
-    actualizarIconoCarrito();
 }
 
 /**
  * Vacía completamente el carrito
  */
-function vaciarCarrito() {
+async function vaciarCarrito() {
     if (carrito.length === 0) {
         alert('El carrito está vacío, primero agrega productos antes de vaciar.');
         return;
     }
-    carrito = [];
-    guardarCarritoUsuario([]);
-    actualizarCarrito();
-    actualizarIconoCarrito();
+    
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/carrito/clear', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                usuarioId: parseInt(usuarioId)
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            await cargarCarrito();
+            alert('Carrito vaciado exitosamente');
+        } else {
+            alert('Error al vaciar carrito: ' + data.error);
+        }
+    } catch (error) {
+        console.error('[ERROR] Error al vaciar carrito:', error);
+        alert('Error al vaciar carrito');
+    }
 }
 
 /**
@@ -70,17 +124,46 @@ function actualizarCarrito() {
 }
 
 /**
- * Procede al pago guardando el carrito actual
+ * Procede al pago creando una venta en la BD
  */
-function procederAlPago(evento) {
+async function procederAlPago(evento) {
     evento.preventDefault();
     if (carrito.length === 0) {
         alert('El carrito está vacío, agrega productos antes de proceder al pago.');
         return;
     }
-    localStorage.setItem('carritoActual', JSON.stringify(carrito));
-    localStorage.setItem('totalActual', document.getElementById('total').textContent.replace('$', ''));
-    window.location.href = '/ticket';
+    
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (!usuarioId) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/ventas/crear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                usuarioId: parseInt(usuarioId)
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Guardar información de la venta para mostrar en el ticket
+            localStorage.setItem('ultimaVentaId', data.ventaId);
+            localStorage.setItem('totalActual', data.total);
+            window.location.href = '/ticket';
+        } else {
+            alert('Error al procesar la compra: ' + data.error);
+        }
+    } catch (error) {
+        console.error('[ERROR] Error al procesar compra:', error);
+        alert('Error al procesar la compra');
+    }
 }
 
 /**
@@ -104,7 +187,7 @@ function actualizarTopbarSesion() {
 }
 
 // Inicializar página del carrito
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Verificar sesión
     const usuarioNombre = localStorage.getItem('usuarioNombre');
     if (!usuarioNombre) {
@@ -113,11 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Cargar carrito desde localStorage
-    carrito = obtenerCarritoUsuario();
+    // Cargar carrito desde API
+    await cargarCarrito();
 
     // Actualizar UI
     actualizarTopbarSesion();
-    actualizarCarrito();
-    actualizarIconoCarrito();
 });

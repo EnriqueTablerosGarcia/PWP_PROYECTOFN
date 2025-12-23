@@ -29,13 +29,7 @@ router.get('/productos', (req, res) => {
 });
 
 router.get('/carrito', (req, res) => {
-    config.query("SELECT * FROM productos", (err, productos) => {
-        if (err) {
-            console.error(err);
-            return res.render('index', { productos: [] });
-        }
-        res.render('index', { productos: productos });
-    });
+    res.render('index');
 });
 
 router.get('/ticket', (req, res) => {
@@ -141,22 +135,37 @@ router.post('/register', (req, res) => {
     // Usar el correo como nombre (sin el dominio)
     const nombre = correo.split('@')[0];
 
+    console.log(`\n${'='.repeat(60)}`);
+    console.log('[MYSQL] GUARDANDO EN TABLA: usuarios');
+    console.log(`${'='.repeat(60)}`);
+    console.log('DATOS DEL USUARIO:');
+    console.log(`   - nombre: ${nombre}, email: ${correo}, password: ${'*'.repeat(password.length)} (encriptada), created_at: CURRENT_TIMESTAMP`);
+    console.log(`${'='.repeat(60)}\n`);
+
     config.query(
         "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)",
         [nombre, correo, password],
-        (error) => {
+        (error, result) => {
             if (error) {
-                console.log('Error al registrar:', error);
+                console.log('[ERROR] Error al registrar en MySQL:', error.message);
                 if (error.code === 'ER_DUP_ENTRY') {
                     return res.render('crearCuenta', { error: "Este correo ya está registrado" });
                 }
                 return res.render('crearCuenta', { error: "Error al crear la cuenta" });
             }
-            console.log('Usuario registrado exitosamente:', correo);
+            console.log('[MYSQL] USUARIO GUARDADO EXITOSAMENTE - ID:', result.insertId, '| Email:', correo);
+            console.log(`${'='.repeat(60)}\n`);
             res.render('login', { success: "Cuenta creada con éxito. Ahora puedes iniciar sesión.", error: null });
         }
     );
 });
+
+// API REST para productos (deben ir ANTES de las rutas POST de usuarios para evitar conflictos)
+router.get('/api/productos', productController.getAll);
+router.get('/api/productos/:id', productController.getById);
+router.post('/api/productos', productController.create);
+router.put('/api/productos/:id', productController.update);
+router.delete('/api/productos/:id', productController.deleteProduct);
 
 router.post('/eliminar-cuenta', (req, res) => {
     const { id } = req.body;
@@ -186,6 +195,171 @@ router.post('/eliminar-cuenta', (req, res) => {
     );
 });
 
-router.post('/products', productController.create);
+// Cambiar contraseña
+router.post('/cambiar-contrasena', (req, res) => {
+    const { usuarioId, passwordActual, passwordNueva } = req.body;
+
+    console.log('[DEBUG] POST /cambiar-contrasena - Usuario:', usuarioId);
+
+    if (!usuarioId || !passwordActual || !passwordNueva) {
+        return res.json({ 
+            success: false, 
+            message: "Todos los campos son requeridos" 
+        });
+    }
+
+    // Verificar contraseña actual
+    config.query(
+        "SELECT password FROM usuarios WHERE id = ?",
+        [usuarioId],
+        (error, results) => {
+            if (error) {
+                console.error('[ERROR] Error al verificar contraseña:', error);
+                return res.json({ 
+                    success: false, 
+                    message: "Error al verificar contraseña" 
+                });
+            }
+
+            if (results.length === 0) {
+                return res.json({ 
+                    success: false, 
+                    message: "Usuario no encontrado" 
+                });
+            }
+
+            if (results[0].password !== passwordActual) {
+                return res.json({ 
+                    success: false, 
+                    message: "La contraseña actual es incorrecta" 
+                });
+            }
+
+            // Actualizar contraseña
+            console.log(`\n${'='.repeat(60)}`);
+            console.log('[MYSQL] ACTUALIZANDO TABLA: usuarios (contraseña)');
+            console.log(`${'='.repeat(60)}`);
+            console.log(`   usuario_id: ${usuarioId}, nueva_password: ${'*'.repeat(passwordNueva.length)} caracteres`);
+            console.log(`${'='.repeat(60)}\n`);
+            
+            config.query(
+                "UPDATE usuarios SET password = ? WHERE id = ?",
+                [passwordNueva, usuarioId],
+                (error, result) => {
+                    if (error) {
+                        console.error('[ERROR] Error al actualizar contraseña en MySQL:', error.message);
+                        return res.json({ 
+                            success: false, 
+                            message: "Error al actualizar contraseña" 
+                        });
+                    }
+
+                    console.log('[MYSQL] CONTRASEÑA ACTUALIZADA EXITOSAMENTE - Usuario ID:', usuarioId, '| Filas afectadas:', result.affectedRows);
+                    console.log(`${'='.repeat(60)}\n`);
+                    
+                    res.json({ 
+                        success: true, 
+                        message: "Contraseña actualizada exitosamente" 
+                    });
+                }
+            );
+        }
+    );
+});
+
+// Cambiar correo
+router.post('/cambiar-correo', (req, res) => {
+    const { usuarioId, correoNuevo, password } = req.body;
+
+    console.log('[DEBUG] POST /cambiar-correo - Usuario:', usuarioId);
+
+    if (!usuarioId || !correoNuevo || !password) {
+        return res.json({ 
+            success: false, 
+            message: "Todos los campos son requeridos" 
+        });
+    }
+
+    // Verificar contraseña
+    config.query(
+        "SELECT password FROM usuarios WHERE id = ?",
+        [usuarioId],
+        (error, results) => {
+            if (error) {
+                console.error('[ERROR] Error al verificar usuario:', error);
+                return res.json({ 
+                    success: false, 
+                    message: "Error al verificar usuario" 
+                });
+            }
+
+            if (results.length === 0) {
+                return res.json({ 
+                    success: false, 
+                    message: "Usuario no encontrado" 
+                });
+            }
+
+            if (results[0].password !== password) {
+                return res.json({ 
+                    success: false, 
+                    message: "La contraseña es incorrecta" 
+                });
+            }
+
+            // Verificar que el nuevo correo no esté en uso
+            config.query(
+                "SELECT id FROM usuarios WHERE email = ? AND id != ?",
+                [correoNuevo, usuarioId],
+                (error, results) => {
+                    if (error) {
+                        console.error('[ERROR] Error al verificar correo:', error);
+                        return res.json({ 
+                            success: false, 
+                            message: "Error al verificar correo" 
+                        });
+                    }
+
+                    if (results.length > 0) {
+                        return res.json({ 
+                            success: false, 
+                            message: "Este correo ya está en uso" 
+                        });
+                    }
+
+                    // Actualizar correo
+                    console.log(`\n${'='.repeat(60)}`);
+                    console.log('[MYSQL] ACTUALIZANDO TABLA: usuarios (email)');
+                    console.log(`${'='.repeat(60)}`);
+                    console.log(`   usuario_id: ${usuarioId}, correo_nuevo: ${correoNuevo}`);
+                    console.log(`${'='.repeat(60)}\n`);
+                    
+                    config.query(
+                        "UPDATE usuarios SET email = ? WHERE id = ?",
+                        [correoNuevo, usuarioId],
+                        (error, result) => {
+                            if (error) {
+                                console.error('[ERROR] Error al actualizar correo en MySQL:', error.message);
+                                return res.json({ 
+                                    success: false, 
+                                    message: "Error al actualizar correo" 
+                                });
+                            }
+
+                            console.log('[MYSQL] CORREO ACTUALIZADO EXITOSAMENTE - Usuario ID:', usuarioId, '| Nuevo correo:', correoNuevo, '| Filas afectadas:', result.affectedRows);
+                            console.log(`${'='.repeat(60)}\n`);
+                            
+                            res.json({ 
+                                success: true, 
+                                message: "Correo actualizado exitosamente",
+                                nuevoCorreo: correoNuevo
+                            });
+                        }
+                    );
+                }
+            );
+        }
+    );
+});
 
 export default router;

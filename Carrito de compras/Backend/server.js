@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 //aqui nosotros tenemos que agregar las rutas que se van a consumir
 import productroutes from './routes/productroutes.js';
+import carritoroutes from './routes/carritoroutes.js';
+import ventasroutes from './routes/ventasroutes.js';
 
 
 const app = express();
@@ -30,6 +32,8 @@ app.use(express.static(path.join(projectRoot, 'Frontend')));
 
 // Rutas
 app.use('/', productroutes);
+app.use('/api/carrito', carritoroutes);
+app.use('/api/ventas', ventasroutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);

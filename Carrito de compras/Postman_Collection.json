@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "carrito-compras-api",
+		"name": "Carrito de Compras - API REST",
+		"description": "Colección completa de endpoints para el sistema de carrito de compras con Node.js, Express y MySQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "Obtener todos los productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/productos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "productos"]
+						},
+						"description": "Obtiene la lista completa de productos disponibles"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/productos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "productos"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"body": "{\n  \"success\": true,\n  \"productos\": [\n    {\n      \"id\": 1,\n      \"nombre\": \"Mini Babybel Original\",\n      \"precio\": 45.00,\n      \"descripcion\": \"Queso Mini Babybel Original\",\n      \"imagen\": \"babybel-original.png\",\n      \"stock\": 50\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/productos/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "productos", "1"]
+						},
+						"description": "Obtiene un producto específico por su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Mini Babybel Light\",\n  \"precio\": 43.00,\n  \"descripcion\": \"Queso Mini Babybel Light\",\n  \"imagen\": \"babybel-light.png\",\n  \"stock\": 30\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/productos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "productos"]
+						},
+						"description": "Crea un nuevo producto en el catálogo"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar producto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Mini Babybel Original\",\n  \"precio\": 47.00,\n  \"stock\": 60\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/productos/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "productos", "1"]
+						},
+						"description": "Actualiza los datos de un producto existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/productos/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "productos", "1"]
+						},
+						"description": "Elimina un producto del catálogo"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de productos (CRUD completo)"
+		},
+		{
+			"name": "Carrito",
+			"item": [
+				{
+					"name": "Obtener carrito del usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "1"]
+						},
+						"description": "Obtiene todos los items del carrito de un usuario específico"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/carrito/1",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "carrito", "1"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"body": "{\n  \"success\": true,\n  \"carrito\": [\n    {\n      \"id\": 1,\n      \"usuario_id\": 1,\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"nombre\": \"Mini Babybel Original\",\n      \"precio\": 45.00,\n      \"imagen\": \"babybel-original.png\",\n      \"stock\": 50\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener total del carrito",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/1/total",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "1", "total"]
+						},
+						"description": "Calcula el total del carrito de un usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar producto al carrito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 2\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/add",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "add"]
+						},
+						"description": "Agrega un producto al carrito o incrementa su cantidad si ya existe"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar cantidad en carrito",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 5\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/update",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "update"]
+						},
+						"description": "Actualiza la cantidad de un producto en el carrito"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto del carrito",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1,\n  \"productoId\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/remove",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "remove"]
+						},
+						"description": "Elimina un producto específico del carrito"
+					},
+					"response": []
+				},
+				{
+					"name": "Vaciar carrito",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/carrito/clear",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "carrito", "clear"]
+						},
+						"description": "Vacía completamente el carrito de un usuario"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión del carrito de compras"
+		},
+		{
+			"name": "Ventas",
+			"item": [
+				{
+					"name": "Crear venta desde carrito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/ventas/crear",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "ventas", "crear"]
+						},
+						"description": "Crea una venta a partir del carrito actual del usuario y vacía el carrito"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"usuarioId\": 1\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/ventas/crear",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "ventas", "crear"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Venta completada\",\n  \"ventaId\": 1,\n  \"total\": 90.00\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener todas las ventas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/ventas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "ventas"]
+						},
+						"description": "Obtiene todas las ventas realizadas (para administración)"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener ventas de un usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/ventas/usuario/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "ventas", "usuario", "1"]
+						},
+						"description": "Obtiene el historial de ventas de un usuario específico"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener detalle de venta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/ventas/1/detalle",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "ventas", "1", "detalle"]
+						},
+						"description": "Obtiene el detalle completo de una venta específica"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de ventas"
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "usuario@ejemplo.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["login"]
+						},
+						"description": "Inicia sesión con email y contraseña"
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "correo",
+									"value": "nuevo@ejemplo.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["register"]
+						},
+						"description": "Registra un nuevo usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar contraseña",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1,\n  \"passwordActual\": \"password123\",\n  \"passwordNueva\": \"newpassword456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/cambiar-contrasena",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["cambiar-contrasena"]
+						},
+						"description": "Cambia la contraseña de un usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar correo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": 1,\n  \"correoNuevo\": \"nuevocorreo@ejemplo.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/cambiar-correo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["cambiar-correo"]
+						},
+						"description": "Cambia el correo electrónico de un usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar cuenta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/eliminar-cuenta",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["eliminar-cuenta"]
+						},
+						"description": "Elimina la cuenta de un usuario"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de usuarios"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambiar Correo</title>
-    <link rel="stylesheet" href="../css/cambiar.css">
+    <link rel="stylesheet" href="/css/cambiar.css">
 </head>
 <body>
 
@@ -22,25 +22,130 @@
     <div class="contenedor">
         <h2>Cambiar Correo</h2>
 
-        <div class="campo">
-            <label>Correo Actual:</label>
-            <input type="email">
-        </div>
+        <div id="mensaje" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 4px;"></div>
 
-        <div class="campo">
-            <label>Nuevo Correo:</label>
-            <input type="email">
-        </div>
+        <form id="formCambiarCorreo" onsubmit="cambiarCorreo(event)">
+            <div class="campo">
+                <label>Correo Actual:</label>
+                <input type="email" id="correoActual" readonly>
+            </div>
 
-        <div class="campo">
-            <label>Confirmar Nuevo Correo:</label>
-            <input type="email">
-        </div>
+            <div class="campo">
+                <label>Nuevo Correo:</label>
+                <input type="email" id="correoNuevo" required>
+            </div>
 
-        <a href="/carrito" class="btn">Guardar</a>
-        <a href="/usuario" class="btn">Regresar</a>
+            <div class="campo">
+                <label>Confirmar Nuevo Correo:</label>
+                <input type="email" id="correoConfirmar" required>
+            </div>
+
+            <div class="campo">
+                <label>Contraseña (para confirmar):</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <button type="submit" class="btn">Guardar</button>
+            <a href="/usuario" class="btn">Regresar</a>
+        </form>
     </div>
 
     <script src="/js/session-check.js"></script>
+    <script>
+        // Cargar correo actual
+        window.addEventListener('DOMContentLoaded', () => {
+            const correoActual = localStorage.getItem('usuarioEmail');
+            if (correoActual) {
+                document.getElementById('correoActual').value = correoActual;
+            }
+        });
+
+        async function cambiarCorreo(event) {
+            event.preventDefault();
+            
+            const correoNuevo = document.getElementById('correoNuevo').value;
+            const correoConfirmar = document.getElementById('correoConfirmar').value;
+            const password = document.getElementById('password').value;
+            const mensaje = document.getElementById('mensaje');
+            
+            // Validar que los correos coincidan
+            if (correoNuevo !== correoConfirmar) {
+                mensaje.textContent = 'Los correos no coinciden';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+                return;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(correoNuevo)) {
+                mensaje.textContent = 'Formato de correo inválido';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+                return;
+            }
+            
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (!usuarioId) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/cambiar-correo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usuarioId: parseInt(usuarioId),
+                        correoNuevo: correoNuevo,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Actualizar localStorage con nuevo correo
+                    localStorage.setItem('usuarioEmail', data.nuevoCorreo);
+                    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+                    usuario.email = data.nuevoCorreo;
+                    localStorage.setItem('usuario', JSON.stringify(usuario));
+                    
+                    mensaje.textContent = data.message;
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.style.color = '#2e7d32';
+                    mensaje.style.display = 'block';
+                    
+                    // Actualizar campo de correo actual
+                    document.getElementById('correoActual').value = data.nuevoCorreo;
+                    
+                    // Limpiar formulario
+                    document.getElementById('correoNuevo').value = '';
+                    document.getElementById('correoConfirmar').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = '/usuario';
+                    }, 2000);
+                } else {
+                    mensaje.textContent = data.message;
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mensaje.textContent = 'Error al cambiar el correo';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.style.color = '#c62828';
+                mensaje.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
