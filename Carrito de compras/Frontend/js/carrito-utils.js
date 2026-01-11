@@ -7,6 +7,7 @@
 async function obtenerCarritoAPI() {
     const usuarioId = localStorage.getItem('usuarioId');
     if (!usuarioId) {
+        console.warn('[WARN] No hay usuario logueado');
         return [];
     }
     
@@ -23,8 +24,10 @@ async function obtenerCarritoAPI() {
                 imagen: item.imagen,
                 stock: item.stock
             }));
+        } else {
+            console.error('[ERROR] Error al obtener carrito desde API:', data.error);
+            return [];
         }
-        return [];
     } catch (error) {
         console.error('[ERROR] Error al obtener carrito:', error);
         return [];
@@ -35,18 +38,24 @@ async function obtenerCarritoAPI() {
  * Actualiza el ícono del carrito según la cantidad de items
  */
 async function actualizarIconoCarrito() {
-    const carrito = await obtenerCarritoAPI();
-    const totalProductos = carrito.reduce((suma, producto) => suma + producto.cantidad, 0);
-    const iconoCarrito = document.getElementById('cart-icon');
-    
-    if (iconoCarrito) {
-        if (totalProductos > 0) {
-            iconoCarrito.src = '/img/carritolleno.png';
-            iconoCarrito.alt = 'Carrito Cargado';
+    try {
+        const carrito = await obtenerCarritoAPI();
+        const totalProductos = carrito.reduce((suma, producto) => suma + producto.cantidad, 0);
+        const iconoCarrito = document.getElementById('cart-icon');
+        
+        if (iconoCarrito) {
+            if (totalProductos > 0) {
+                iconoCarrito.src = '/img/carritolleno.png';
+                iconoCarrito.alt = 'Carrito Cargado';
+            } else {
+                iconoCarrito.src = '/img/Carritoicono.png';
+                iconoCarrito.alt = 'Carrito Vacío';
+            }
         } else {
-            iconoCarrito.src = '/img/Carritoicono.png';
-            iconoCarrito.alt = 'Carrito Vacío';
+            console.warn('[WARN] Elemento cart-icon no encontrado en el DOM');
         }
+    } catch (error) {
+        console.error('[ERROR] Error al actualizar ícono del carrito [carrito-utils.js - actualizarIconoCarrito()]:', error);
     }
 }
 
@@ -56,10 +65,11 @@ async function actualizarIconoCarrito() {
  */
 function verificarSesionCarrito(evento) {
     evento.preventDefault();
-    const usuarioNombre = localStorage.getItem('usuarioNombre');
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
     
-    if (!usuarioNombre) {
+    if (!usuario || !usuario.id) {
         alert('Primero tienes que iniciar sesión para ver el carrito');
+        window.location.href = '/login';
         return;
     }
     

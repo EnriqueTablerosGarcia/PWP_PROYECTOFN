@@ -87,7 +87,7 @@ function configurarBotonesAgregar() {
                 
                 if (cantidadTotal > stockDisponible) {
                     const disponible = stockDisponible - cantidadEnCarrito;
-                    alert(`No hay suficiente stock. Solo puedes agregar ${disponible} unidades más. Stock disponible: ${stockDisponible}`);
+                    alert(`No hay suficiente stock.\n\nDisponible para agregar: ${disponible} unidades\nStock total: ${stockDisponible}\nEn carrito: ${cantidadEnCarrito}`);
                     return;
                 }
                 
@@ -107,7 +107,7 @@ function configurarBotonesAgregar() {
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert(`${nombreProducto} agregado al carrito`);
+                    alert(`${nombreProducto} agregado al carrito (${cantidadDeseada} unidad${cantidadDeseada > 1 ? 'es' : ''})`);
                     await actualizarIconoCarrito();
                     inputCantidad.value = 1;
                 } else {
@@ -115,7 +115,7 @@ function configurarBotonesAgregar() {
                 }
             } catch (error) {
                 console.error('[ERROR] Error al agregar al carrito:', error);
-                alert('Error al agregar al carrito');
+                alert('Error al agregar al carrito. Por favor, intenta nuevamente.');
             }
         };
     });

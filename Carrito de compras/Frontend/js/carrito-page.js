@@ -64,8 +64,22 @@ async function vaciarCarrito() {
         return;
     }
     
+    // Primera confirmación
+    if (!confirm('¿Estás seguro de que deseas vaciar el carrito?\n\nEsta acción eliminará todos los productos del carrito.')) {
+        alert('Operación cancelada. El carrito se mantiene.');
+        return;
+    }
+    
+    // Segunda confirmación
+    if (!confirm('ÚLTIMA CONFIRMACIÓN\n\n¿Realmente deseas eliminar TODOS los productos del carrito?\n\nEsta acción NO SE PUEDE DESHACER.')) {
+        alert('Operación cancelada. El carrito se mantiene.');
+        return;
+    }
+    
     const usuarioId = localStorage.getItem('usuarioId');
     if (!usuarioId) {
+        alert('Error [session-check.js]: No hay sesión activa');
+        window.location.href = '/login';
         return;
     }
     
@@ -86,11 +100,11 @@ async function vaciarCarrito() {
             await cargarCarrito();
             alert('Carrito vaciado exitosamente');
         } else {
-            alert('Error al vaciar carrito: ' + data.error);
+            alert('Error al vaciar el carrito: ' + data.error);
         }
     } catch (error) {
         console.error('[ERROR] Error al vaciar carrito:', error);
-        alert('Error al vaciar carrito');
+        alert('Error al vaciar el carrito. Por favor, intenta nuevamente.');
     }
 }
 
@@ -128,6 +142,8 @@ function actualizarCarrito() {
  */
 async function procederAlPago(evento) {
     evento.preventDefault();
+    
+    // Validación de carrito vacío
     if (carrito.length === 0) {
         alert('El carrito está vacío, agrega productos antes de proceder al pago.');
         return;
@@ -135,7 +151,15 @@ async function procederAlPago(evento) {
     
     const usuarioId = localStorage.getItem('usuarioId');
     if (!usuarioId) {
+        alert('Error [session-check.js]: No hay sesión activa');
         window.location.href = '/login';
+        return;
+    }
+    
+    // Confirmación antes de comprar
+    const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    if (!confirm(`¿Confirmar compra por un total de $${total.toFixed(2)}?\n\nProductos: ${carrito.length} items`)) {
+        alert('Compra cancelada');
         return;
     }
     
@@ -162,7 +186,7 @@ async function procederAlPago(evento) {
         }
     } catch (error) {
         console.error('[ERROR] Error al procesar compra:', error);
-        alert('Error al procesar la compra');
+        alert('Error al procesar la compra. Por favor, intenta nuevamente.');
     }
 }
 
@@ -189,10 +213,12 @@ function actualizarTopbarSesion() {
 // Inicializar página del carrito
 document.addEventListener('DOMContentLoaded', async function() {
     // Verificar sesión
-    const usuarioNombre = localStorage.getItem('usuarioNombre');
-    if (!usuarioNombre) {
+    const usuarioId = localStorage.getItem('usuarioId');
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    
+    if (!usuarioId || !usuario || !usuario.id) {
         alert('Primero tienes que iniciar sesión para ver el carrito');
-        window.location.href = '/principal';
+        window.location.href = '/login';
         return;
     }
 

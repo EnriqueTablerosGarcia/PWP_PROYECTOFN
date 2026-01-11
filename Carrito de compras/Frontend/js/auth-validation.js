@@ -1,5 +1,6 @@
 // auth-validation.js
 // Validaciones de autenticación: login y registro
+// Incluye protección contra emojis, SQL Injection y XSS
 
 /**
  * Valida que el correo sea de @gmail.com o @hotmail.com
@@ -19,11 +20,33 @@ function inicializarValidacionLogin() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(evento) {
             const email = document.getElementById('emailLogin').value;
+            const password = document.getElementById('passwordLogin').value;
             
-            if (!validarCorreo(email)) {
-                evento.preventDefault();
-                alert('Solo se permiten correos de @gmail.com o @hotmail.com');
-                return false;
+            // Validar correo con sanitize.js (si está disponible)
+            if (typeof validarEmailSeguro === 'function') {
+                const resultadoEmail = validarEmailSeguro(email);
+                if (!resultadoEmail.valido) {
+                    evento.preventDefault();
+                    alert(resultadoEmail.error);
+                    return false;
+                }
+            } else {
+                // Validación básica si sanitize.js no está cargado
+                if (!validarCorreo(email)) {
+                    evento.preventDefault();
+                    alert('Solo se permiten correos de @gmail.com o @hotmail.com');
+                    return false;
+                }
+            }
+            
+            // Validar contraseña (si sanitize.js está disponible)
+            if (typeof validarPasswordSeguro === 'function') {
+                const resultadoPassword = validarPasswordSeguro(password);
+                if (!resultadoPassword.valido) {
+                    evento.preventDefault();
+                    alert(resultadoPassword.error);
+                    return false;
+                }
             }
         });
     }
@@ -37,11 +60,33 @@ function inicializarValidacionRegistro() {
     if (registerForm) {
         registerForm.addEventListener('submit', function(evento) {
             const email = document.getElementById('emailRegister').value;
+            const password = document.getElementById('passwordRegister').value;
             
-            if (!validarCorreo(email)) {
-                evento.preventDefault();
-                alert('Solo se permiten correos de @gmail.com o @hotmail.com');
-                return false;
+            // Validar correo con sanitize.js (si está disponible)
+            if (typeof validarEmailSeguro === 'function') {
+                const resultadoEmail = validarEmailSeguro(email);
+                if (!resultadoEmail.valido) {
+                    evento.preventDefault();
+                    alert(resultadoEmail.error);
+                    return false;
+                }
+            } else {
+                // Validación básica si sanitize.js no está cargado
+                if (!validarCorreo(email)) {
+                    evento.preventDefault();
+                    alert('Solo se permiten correos de @gmail.com o @hotmail.com');
+                    return false;
+                }
+            }
+            
+            // Validar contraseña (si sanitize.js está disponible)
+            if (typeof validarPasswordSeguro === 'function') {
+                const resultadoPassword = validarPasswordSeguro(password);
+                if (!resultadoPassword.valido) {
+                    evento.preventDefault();
+                    alert(resultadoPassword.error);
+                    return false;
+                }
             }
         });
     }

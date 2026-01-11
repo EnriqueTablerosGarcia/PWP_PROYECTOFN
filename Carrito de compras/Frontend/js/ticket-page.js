@@ -11,7 +11,11 @@ function mostrarProductosTicket() {
     const productosTicket = document.getElementById('productos-ticket');
     const totalTicket = document.getElementById('total-ticket');
 
-    if (!productosTicket || !totalTicket) return;
+    if (!productosTicket || !totalTicket) {
+        console.error('[ERROR] Elementos del ticket no encontrados en el DOM');
+        alert('Error al cargar el ticket. Por favor, recarga la página.');
+        return;
+    }
 
     if (carritoActual.length > 0) {
         carritoActual.forEach(producto => {
@@ -47,6 +51,7 @@ function mostrarProductosTicket() {
         totalTicket.textContent = totalActual;
     } else {
         productosTicket.innerHTML = '<div class="info-box"><p>No hay productos en el carrito</p></div>';
+        console.warn('[WARN] Carrito vacío al mostrar ticket');
     }
 }
 
@@ -60,6 +65,12 @@ function confirmarCompra() {
     if (carritoActual.length === 0) {
         alert('No hay productos para comprar');
         window.location.href = '/carrito';
+        return;
+    }
+
+    // Confirmación final
+    if (!confirm(`¿Confirmar compra final por $${totalActual}?`)) {
+        alert('Compra cancelada');
         return;
     }
 
