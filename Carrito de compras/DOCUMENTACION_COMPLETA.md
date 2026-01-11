@@ -1,22 +1,29 @@
 # CARRITO DE COMPRAS - DOCUMENTACION COMPLETA
-
-## REQUISITOS CUMPLIDOS (100%)
+Correa Estrada Arantxa
+Flores Lozornio Kenai
+Molina Leal Sebastian Enrique
+Tableros García Enrique 
+## REQUISITOS:
 
 ### 1. Separacion Backend y Frontend
-* **Backend**: Node.js + Express en `/Backend/`
+
+* **Backend**: 
+Tableros 
+Node.js + Express en `/Backend/` 
   - `server.js` - Servidor principal (puerto 3000)
   - `routes/` - Rutas API y vistas (productroutes, carritoroutes, ventasroutes)
   - `controllers/` - Lógica de negocio (productcontroller, carritocontroller, ventascontroller)
   - `models/` - Modelos de datos (productmodel, carritomodel, ventasmodel)
   - `config/dbconfig.js` - Configuración MySQL
 
-* **Frontend**: EJS + CSS + JavaScript en `/Frontend/`
+* **Frontend**:  Kenai
+EJS + CSS + JavaScript en `/Frontend/`
   - `views/` - 11 plantillas EJS
   - `css/` - Estilos modulares
   - `js/` - 7 archivos JavaScript con integración a API
   - `img/` - Imágenes de productos
 
-### 2. Base de Datos - COMPLETA
+### 2. Base de Datos - 
 * `usuarios` - Gestión de usuarios
 * `productos` - Catálogo de productos
 * `carrito` - Carrito persistente en BD
@@ -36,37 +43,26 @@
 * Logs de errores con stack trace
 * Logs de acciones del usuario
 
-### 5. Postman
+### 5. Postman Arantxa 
 * Colección completa con todos los endpoints
 * Ejemplos de request/response
 * Documentación de cada endpoint
 
 ---
 
-## INSTALACION Y CONFIGURACION
+## CONFIGURACION
 
-### Prerequisitos
-- Node.js (v14 o superior)
-- MySQL (v5.7 o superior)
-- Postman (opcional, para pruebas de API)
 
-### Paso 1: Instalar dependencias
+- Node.js 
+- MySQL 
+- Postman 
+### 1
 ```bash
 cd "Carrito de compras"
 npm install
 ```
 
-### Paso 2: Configurar base de datos
-1. Crear la base de datos ejecutando `database.sql`:
-```bash
-mysql -u root -p < database.sql
-```
-
-O desde MySQL Workbench/CLI:
-```sql
-SOURCE database.sql;
-```
-
+BD 
 2. Configurar credenciales en `Backend/config/dbconfig.js`:
 ```javascript
 host: 'localhost',
@@ -74,13 +70,12 @@ user: 'root',
 password: 'TU_PASSWORD',
 database: 'carrito_db'
 ```
-
-### Paso 3: Iniciar el servidor
+3. 
 ```bash
 npm start
 ```
 
-El servidor estará disponible en: `http://localhost:3000`
+`http://localhost:3000`
 
 ---
 
@@ -295,12 +290,8 @@ Request:
 
 ## PRUEBAS CON POSTMAN
 
-### Importar la colección
-1. Abrir Postman
-2. Seleccionar archivo `Postman_Collection.json`
-3. La colección "Carrito de Compras - API REST" estará disponible
 
-### Flujo de prueba completo
+
 
 1. **Crear usuario**
    - Usar endpoint: POST `/register`
@@ -351,44 +342,11 @@ Al ejecutar `npm start`, la consola mostrará:
 
 ---
 
-## ESTRUCTURA DEL PROYECTO
 
-```
-Carrito de compras/
-├── Backend/
-│   ├── server.js                    # Servidor Express
-│   ├── config/
-│   │   └── dbconfig.js             # Configuración MySQL
-│   ├── controllers/
-│   │   ├── productcontroller.js    # CRUD productos + logs
-│   │   ├── carritocontroller.js    # Gestión carrito + logs
-│   │   └── ventascontroller.js     # Sistema ventas + logs
-│   ├── models/
-│   │   ├── productmodel.js         # Modelo productos
-│   │   ├── carritomodel.js         # Modelo carrito
-│   │   └── ventasmodel.js          # Modelo ventas
-│   └── routes/
-│       ├── productroutes.js        # Rutas productos + usuarios
-│       ├── carritoroutes.js        # Rutas API carrito
-│       └── ventasroutes.js         # Rutas API ventas
-├── Frontend/
-│   ├── views/                      # 11 archivos EJS
-│   ├── css/                        # Estilos
-│   ├── js/
-│   │   ├── carrito-utils.js       # Utilidades con API
-│   │   ├── carrito-page.js        # Página carrito con API
-│   │   ├── principal-page.js      # Productos con API
-│   │   └── [otros archivos]
-│   └── img/                        # Imágenes
-├── database.sql                    # Script BD completa
-├── Postman_Collection.json         # Colección Postman
-├── package.json                    # Dependencias
-└── DOCUMENTACION_COMPLETA.md       # Este archivo
-```
 
----
 
-## CARACTERISTICAS IMPLEMENTADAS
+
+## Trabajo:
 
 ### Backend
 - API REST completa
@@ -417,44 +375,7 @@ Carrito de compras/
 - Timestamps automáticos
 
 ---
-
-## CUMPLIMIENTO DE REQUISITOS
-
-| Requisito | Estado | Porcentaje |
-|-----------|--------|------------|
-| Separación Back/Front | Completo | 100% |
-| Tabla usuarios | Completo | 100% |
-| Tabla productos | Completo | 100% |
-| Tabla ventas | Completo | 100% |
-| Tabla detalle_ventas | Completo | 100% |
-| Tabla carrito | Completo | 100% |
-| Crear cuenta | Completo | 100% |
-| Editar perfil | Completo | 100% |
-| Agregar a carrito | Completo | 100% |
-| Vaciar carrito | Completo | 100% |
-| Comprar | Completo | 100% |
-| CRUD Productos | Completo | 100% |
-| API REST | Completo | 100% |
-| Debugging/Logs | Completo | 100% |
-| Postman | Completo | 100% |
-
-**CUMPLIMIENTO GENERAL: 100%**
-
----
-
-## TECNOLOGIAS UTILIZADAS
-
-- **Backend**: Node.js, Express.js
-- **Base de Datos**: MySQL
-- **Frontend**: EJS, JavaScript (ES6+), CSS3
-- **Herramientas**: Postman, npm, Git
-
----
-
-## NOTAS ADICIONALES
-
-### Migración de localStorage a BD
-El sistema ahora guarda el carrito en la base de datos en lugar de localStorage. Las funciones antiguas se mantienen por compatibilidad pero están marcadas como DEPRECADAS.
+*** El sistema ahora guarda el carrito en la base de datos en lugar de localStorage, las funciones antiguas se mantienen por compatibilidad pero están marcadas como DEPRECADAS (para avisar que no debe usarse más y que será quitada en futuras versiones).
 
 ### Sistema de Ventas
 Al crear una venta:
@@ -463,23 +384,12 @@ Al crear una venta:
 3. Se actualiza el stock de productos
 4. Se vacía el carrito del usuario
 
-### Seguridad
-**IMPORTANTE**: Este proyecto es educativo. Para producción se recomienda:
-- Implementar JWT para autenticación
-- Hash de contraseñas (bcrypt)
-- Validaciones más robustas
-- HTTPS
-- Rate limiting
-- Sanitización de inputs
 
 ---
 
-## SOPORTE
-
-Para reportar problemas o solicitar mejoras, contactar al equipo de desarrollo.
 
 ---
 
-**Version**: 2.0.0  
-**Ultima actualizacion**: Diciembre 2025  
-**Estado**: Produccion Ready
+**Version**: 2.0.1  
+**Ultima actualizacion**: 10/01/2026
+**Estado**:  Joya 
