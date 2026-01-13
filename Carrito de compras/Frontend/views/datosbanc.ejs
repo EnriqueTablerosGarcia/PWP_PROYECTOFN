@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Compra</title>
+    <link rel="stylesheet" href="../css/datosbanc.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-left">
+            <a href="#" class="cart-container">
+                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
+            </a>
+        </div>
+        <div class="topbar-center">
+            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
+        </div>
+        <div class="topbar-right">
+            <a href="/usuario" class="user-circle">U</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Ticket de Compra</h2>
+
+        <div id="productos-ticket"></div>
+
+        <div class="total">
+            Total: $<span id="total-ticket">0.00</span>
+        </div>
+
+        <h3>Datos de Pago</h3>
+        <form>
+            <div class="form-group">
+                <label for="nombre-usuario">Nombre del Usuario</label>
+                <input type="text" id="nombre-usuario" name="nombreUsuario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numero-tarjeta">Número de Tarjeta</label>
+                <input type="text" id="numero-tarjeta" name="numeroTarjeta" maxlength="16" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha-exp">Fecha de Expiración</label>
+                <input type="month" id="fecha-exp" name="fechaExp" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" name="cvv" maxlength="3" required>
+            </div>
+
+            <button type="submit" class="button btn-comprar">Confirmar Pago</button>
+        </form>
+
+        <a href="/principal" class="button btn-regresar">Regresar</a>
+    </div>
+</body>
+</html>
