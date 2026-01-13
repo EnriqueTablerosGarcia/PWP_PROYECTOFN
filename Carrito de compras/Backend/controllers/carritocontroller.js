@@ -51,9 +51,10 @@ export const addToCarrito = async (req, res) => {
         CarritoModel.add(usuarioId, productoId, cantidad, (err, result) => {
             if (err) {
                 console.error('[ERROR] Error al insertar en MySQL:', err.message);
+                console.error('[ERROR] Detalles completos del error:', err);
                 return res.status(500).json({ 
                     success: false, 
-                    error: 'Error al agregar al carrito' 
+                    error: `Error al agregar al carrito: ${err.message}` 
                 });
             }
             
@@ -70,7 +71,7 @@ export const addToCarrito = async (req, res) => {
         console.error('[ERROR] Error inesperado:', error);
         res.status(500).json({ 
             success: false, 
-            error: 'Error al agregar al carrito' 
+            error: `Error al agregar al carrito: ${error.message}` 
         });
     }
 };
