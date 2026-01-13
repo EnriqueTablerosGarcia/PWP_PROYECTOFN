@@ -3,6 +3,7 @@ body {
     background: #f4f4f4;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
 .topbar {
@@ -123,24 +124,6 @@ body {
 }
 
 .container {
-    width: 90%;
-    max-width: 400px;
-    background: white;
-    padding: 20px;
-    margin: 40px auto;
-    border-radius: 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f9f9f9;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
-
-.container {
     max-width: 600px;
     margin: 100px auto;
     background: #fff;
@@ -190,7 +173,6 @@ form {
 .button {
     display: inline-block;
     padding: 12px 20px;
-    margin-top: 10px;
     border: none;
     border-radius: 6px;
     font-size: 15px;
@@ -199,6 +181,7 @@ form {
     text-align: center;
     text-decoration: none;
     transition: background 0.3s ease;
+    width: 100%;
 }
 
 .btn-comprar {
@@ -207,16 +190,25 @@ form {
 }
 
 .btn-comprar:hover {
-    background: #667eea;
+    background: #764ba2;
 }
 
 .btn-regresar {
-    background: #ccc;
-    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
 }
 
 .btn-regresar:hover {
-    background: #aaa;
+    background: #764ba2;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions .button {
+    flex: 1;
 }
 
 .total {
