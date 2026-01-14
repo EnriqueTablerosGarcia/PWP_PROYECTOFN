@@ -390,6 +390,6 @@ Al crear una venta:
 
 ---
 
-**Version**: 2.0.2  
-**Ultima actualizacion**: 10/01/2026
+**Version**: 2.0.3  
+**Ultima actualizacion**: 12/01/2026
 **Estado**:  Joya 
