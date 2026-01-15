@@ -12,10 +12,17 @@ dotenv.config();
 
 const config = mysql.createPool({
 
+<<<<<<< Updated upstream
     host: 'localhost',
     user: 'root',
     password: 'kenai123',
     database: 'carrito_db',
+=======
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'kenai123',
+    database: process.env.DB_NAME || 'carrito_db',
+>>>>>>> Stashed changes
 
     //connectionLimit : 10,
     //acquireTimeout : 30000,
