@@ -177,10 +177,17 @@ async function procederAlPago(evento) {
         const data = await response.json();
         
         if (data.success) {
-            // Guardar información de la venta para mostrar en el ticket
+            // Limpiar localStorage previo
+            localStorage.removeItem('carritoActual');
+            localStorage.removeItem('totalActual');
+            localStorage.removeItem('ultimaVentaId');
+            
+            // Guardar información de la venta para mostrar en métodos de pago
             localStorage.setItem('ultimaVentaId', data.ventaId);
             localStorage.setItem('totalActual', data.total);
-            window.location.href = '/ticket';
+            // Guardar el carrito actual para mostrarlo en el ticket
+            localStorage.setItem('carritoActual', JSON.stringify(carrito));
+            window.location.href = '/metodospago';
         } else {
             alert('Error al procesar la compra: ' + data.error);
         }

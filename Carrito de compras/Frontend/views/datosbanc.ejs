@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket de Compra</title>
-    <link rel="stylesheet" href="../css/datosbanc.css">
+    <title>Datos Bancarios</title>
+    <link rel="stylesheet" href="/css/datosbanc.css">
 </head>
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="#" class="cart-container">
+            <a href="/carrito" class="cart-container">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="container">
-        <h2>Ticket de Compra</h2>
+        <h2>Datos de Pago</h2>
 
         <div id="productos-ticket"></div>
 
@@ -30,16 +30,16 @@
             Total: $<span id="total-ticket">0.00</span>
         </div>
 
-        <h3>Datos de Pago</h3>
-        <form>
+        <h3>Ingresa tus Datos Bancarios</h3>
+        <form id="form-pago" onsubmit="procesarPago(event)">
             <div class="form-group">
-                <label for="nombre-usuario">Nombre del Usuario</label>
+                <label for="nombre-usuario">Nombre del Titular</label>
                 <input type="text" id="nombre-usuario" name="nombreUsuario" required>
             </div>
 
             <div class="form-group">
                 <label for="numero-tarjeta">Número de Tarjeta</label>
-                <input type="text" id="numero-tarjeta" name="numeroTarjeta" maxlength="16" required>
+                <input type="text" id="numero-tarjeta" name="numeroTarjeta" maxlength="16" pattern="[0-9]{16}" required>
             </div>
 
             <div class="form-group">
@@ -49,14 +49,44 @@
 
             <div class="form-group">
                 <label for="cvv">CVV</label>
-                <input type="password" id="cvv" name="cvv" maxlength="3" required>
+                <input type="password" id="cvv" name="cvv" maxlength="3" pattern="[0-9]{3}" required>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="button btn-comprar">Confirmar Pago</button>
-                <a href="../views/carrito.ejs" class="button btn-regresar">Regresar</a>
+                <a href="/metodospago" class="button btn-regresar">Regresar</a>
             </div>
         </form>
     </div>
+
+    <script src="/js/sanitize.js"></script>
+    <script src="/js/ticket-page.js"></script>
+    <script>
+        // Procesar el pago y redirigir al ticket
+        function procesarPago(event) {
+            event.preventDefault();
+            
+            // Validar que haya información de la compra
+            const totalActual = localStorage.getItem('totalActual');
+            const carritoActual = localStorage.getItem('carritoActual');
+            
+            if (!totalActual || !carritoActual) {
+                alert('No hay información de compra. Por favor, regresa al carrito.');
+                window.location.href = '/carrito';
+                return;
+            }
+            
+            // Simular procesamiento de pago
+            alert('Procesando pago...');
+            
+            // Redirigir al ticket
+            window.location.href = '/ticket';
+        }
+        
+        // Mostrar productos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            mostrarProductosTicket();
+        });
+    </script>
 </body>
 </html>

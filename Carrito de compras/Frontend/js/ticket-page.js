@@ -18,10 +18,30 @@ function mostrarProductosTicket() {
     }
 
     if (carritoActual.length > 0) {
+        // Agrupar productos por ID para evitar duplicados
+        const productosAgrupados = {};
+        
         carritoActual.forEach(producto => {
-            const cajaProducto = document.createElement('div');
-            cajaProducto.className = 'info-box';
-            
+            const id = producto.producto_id || producto.id || producto.nombre;
+            if (productosAgrupados[id]) {
+                // Si ya existe, sumar la cantidad
+                productosAgrupados[id].cantidad = parseInt(productosAgrupados[id].cantidad) + parseInt(producto.cantidad);
+            } else {
+                // Si no existe, agregarlo (crear copia para evitar referencias)
+                productosAgrupados[id] = { 
+                    ...producto,
+                    cantidad: parseInt(producto.cantidad)
+                };
+            }
+        });
+
+        // Crear contenedor único con título
+        const contenedor = document.createElement('div');
+        contenedor.className = 'info-box';
+        contenedor.innerHTML = '<div class="section-title">Productos:</div>';
+
+        // Agregar cada producto al contenedor
+        Object.values(productosAgrupados).forEach(producto => {
             // Determinar imagen según nombre del producto
             let imagenProducto = 'original';
             if (producto.nombre.toLowerCase().includes('gouda')) {
@@ -30,24 +50,28 @@ function mostrarProductosTicket() {
                 imagenProducto = 'mozzarella';
             }
             
-            cajaProducto.innerHTML = `
-                <div class="section-title">Producto:</div>
-                <div class="producto-item">
-                    <img src="../img/babybel-${imagenProducto}.png" 
-                         alt="${producto.nombre}" 
-                         class="producto-img"
-                         onerror="this.src='../img/default-cheese.png'">
-                    <div>
-                        <p class="producto-nombre">${producto.nombre}</p>
-                        <p>Cantidad: ${producto.cantidad}</p>
-                        <p>Precio unitario: $${producto.precio.toFixed(2)}</p>
-                        <p><strong>Subtotal: $${(producto.precio * producto.cantidad).toFixed(2)}</strong></p>
-                    </div>
+            const precio = parseFloat(producto.precio);
+            const subtotal = precio * producto.cantidad;
+            
+            const itemProducto = document.createElement('div');
+            itemProducto.className = 'producto-item';
+            itemProducto.style.marginBottom = '15px';
+            itemProducto.innerHTML = `
+                <img src="/img/babybel-${imagenProducto}.png" 
+                     alt="${producto.nombre}" 
+                     class="producto-img"
+                     onerror="this.src='/img/default-cheese.png'">
+                <div>
+                    <p class="producto-nombre">${producto.nombre}</p>
+                    <p>Cantidad: ${producto.cantidad}</p>
+                    <p>Precio unitario: $${precio.toFixed(2)}</p>
+                    <p><strong>Subtotal: $${subtotal.toFixed(2)}</strong></p>
                 </div>
             `;
-            productosTicket.appendChild(cajaProducto);
+            contenedor.appendChild(itemProducto);
         });
 
+        productosTicket.appendChild(contenedor);
         totalTicket.textContent = totalActual;
     } else {
         productosTicket.innerHTML = '<div class="info-box"><p>No hay productos en el carrito</p></div>';

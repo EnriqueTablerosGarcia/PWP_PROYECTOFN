@@ -57,6 +57,14 @@ router.get('/confirmacion', (req, res) => {
     res.render('confirmacion');
 });
 
+router.get('/metodospago', (req, res) => {
+    res.render('metodospago');
+});
+
+router.get('/datosbanc', (req, res) => {
+    res.render('datosbanc');
+});
+
 // Rutas POST
 router.post('/login', (req, res) => {
     const { email, password } = req.body;

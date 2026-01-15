@@ -71,15 +71,16 @@ export const crearVenta = async (req, res) => {
                 let errorOcurrido = false;
                 
                 items.forEach((item, index) => {
-                    const subtotal = item.precio * item.cantidad;
+                    const precio = parseFloat(item.precio);
+                    const subtotal = precio * item.cantidad;
                     
-                    console.log(`   Detalle #${index + 1}: venta_id=${ventaId}, producto_id=${item.producto_id}, nombre="${item.nombre}", cantidad=${item.cantidad}, precio=$${item.precio.toFixed(2)}, subtotal=$${subtotal.toFixed(2)}`);
+                    console.log(`   Detalle #${index + 1}: venta_id=${ventaId}, producto_id=${item.producto_id}, nombre="${item.nombre}", cantidad=${item.cantidad}, precio=$${precio.toFixed(2)}, subtotal=$${subtotal.toFixed(2)}`);
                     
                     VentasModel.addDetalle(
                         ventaId,
                         item.producto_id,
                         item.cantidad,
-                        item.precio,
+                        precio,
                         subtotal,
                         (err) => {
                             if (err && !errorOcurrido) {
