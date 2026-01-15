@@ -17,6 +17,9 @@ function mostrarProductosTicket() {
         return;
     }
 
+    // Limpiar contenido previo
+    productosTicket.innerHTML = '';
+
     if (carritoActual.length > 0) {
         // Agrupar productos por ID para evitar duplicados
         const productosAgrupados = {};
