@@ -7,15 +7,15 @@
  */
 function contieneInyeccionSQL(texto) {
     if (!texto || typeof texto !== 'string') return false;
-    
+
     const patronesPeligrosos = [
         /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE|UNION|DECLARE|SCRIPT)\b)/gi,
-        /(--|\#|\/\*|\*\/)/g,
+        /(--|#|\/\*|\*\/)/g,
         /('|"|;|\||&|<|>)/g,
         /(\bOR\b.*=.*)/gi,
         /(\bAND\b.*=.*)/gi
     ];
-    
+
     return patronesPeligrosos.some(patron => patron.test(texto));
 }
 
@@ -33,10 +33,10 @@ function contieneEmojis(texto) {
  */
 function sanitizarString(texto) {
     if (!texto || typeof texto !== 'string') return texto;
-    
+
     return texto
         .replace(/[<>]/g, '')
-        .replace(/['"`;]/g, '')
+        .replace(/['\"`;]/g, '')
         .replace(/--/g, '')
         .replace(/\/\*/g, '')
         .replace(/\*\//g, '')
@@ -51,7 +51,7 @@ export function sanitizeBody(req, res, next) {
     if (req.body) {
         Object.keys(req.body).forEach(key => {
             const valor = req.body[key];
-            
+
             if (typeof valor === 'string') {
                 // Detectar emojis
                 if (contieneEmojis(valor)) {
@@ -61,23 +61,44 @@ export function sanitizeBody(req, res, next) {
                         error: `El campo "${key}" no puede contener emojis`
                     });
                 }
-                
-                // Detectar inyección SQL
-                if (contieneInyeccionSQL(valor)) {
-                    console.log(`[SANITIZE-MIDDLEWARE] Posible inyección SQL detectada en campo: ${key}`);
-                    console.log(`[SANITIZE-MIDDLEWARE] Valor sospechoso: ${valor}`);
-                    return res.status(400).json({
-                        success: false,
-                        error: `El campo "${key}" contiene caracteres no permitidos`
-                    });
+
+                // Para el campo password, solo validar contra inyección SQL obvia
+                // No validar caracteres especiales normales
+                if (key === 'password' || key === 'passwordActual' || key === 'passwordNueva') {
+                    // Solo bloquear palabras clave SQL peligrosas
+                    const patronesSQLPeligrosos = [
+                        /(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|DECLARE)\s/gi,
+                        /(--|\/\*|\*\/)/g
+                    ];
+
+                    const esPasswordPeligroso = patronesSQLPeligrosos.some(patron => patron.test(valor));
+
+                    if (esPasswordPeligroso) {
+                        console.log(`[SANITIZE-MIDDLEWARE] Inyección SQL detectada en password`);
+                        return res.status(400).json({
+                            success: false,
+                            error: 'Contraseña inválida'
+                        });
+                    }
+                    // No sanitizar ni modificar la contraseña
+                } else {
+                    // Para otros campos, aplicar validación normal
+                    if (contieneInyeccionSQL(valor)) {
+                        console.log(`[SANITIZE-MIDDLEWARE] Posible inyección SQL detectada en campo: ${key}`);
+                        console.log(`[SANITIZE-MIDDLEWARE] Valor sospechoso: ${valor}`);
+                        return res.status(400).json({
+                            success: false,
+                            error: `El campo "${key}" contiene caracteres no permitidos`
+                        });
+                    }
+
+                    // Sanitizar el valor solo para campos que no son password
+                    req.body[key] = sanitizarString(valor);
                 }
-                
-                // Sanitizar el valor
-                req.body[key] = sanitizarString(valor);
             }
         });
     }
-    
+
     next();
 }
 
@@ -88,7 +109,7 @@ export function sanitizeParams(req, res, next) {
     if (req.params) {
         Object.keys(req.params).forEach(key => {
             const valor = req.params[key];
-            
+
             if (typeof valor === 'string') {
                 if (contieneInyeccionSQL(valor)) {
                     console.log(`[SANITIZE-MIDDLEWARE] Posible inyección SQL en parámetro: ${key}`);
@@ -100,7 +121,7 @@ export function sanitizeParams(req, res, next) {
             }
         });
     }
-    
+
     next();
 }
 
