@@ -30,6 +30,23 @@ body {
     gap: 15px;
 }
 
+.btn-account {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.btn-account:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-1px);
+}
+
 .btn-logout {
     background: rgba(255,255,255,0.2);
     color: white;

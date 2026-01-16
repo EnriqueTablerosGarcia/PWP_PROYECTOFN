@@ -117,6 +117,15 @@ router.get('/usuarios', (req, res) => {
     res.render('admin-usuarios');
 });
 
+// GET - Mi Cuenta (Admin)
+router.get('/cuenta', (req, res) => {
+    // Aquí podrías obtener la info del admin de la sesión
+    // Por ahora usamos valores por defecto
+    res.render('admin-cuenta', {
+        adminEmail: 'kirtableros@gmail.com'
+    });
+});
+
 // GET - Logout
 router.get('/logout', (req, res) => {
     res.send(`
@@ -179,6 +188,175 @@ router.post('/api/usuarios/:id/cambiar-rol', (req, res) => {
                 success: true, 
                 message: `Usuario actualizado a ${rol}` 
             });
+        }
+    );
+});
+
+// API - Cambiar contraseña del admin
+router.post('/api/cambiar-password', (req, res) => {
+    const { adminId, currentPassword, newPassword } = req.body;
+    
+    console.log(`[ADMIN] Cambiar contraseña para usuario ${adminId}`);
+    
+    // Verificar contraseña actual
+    config.query(
+        'SELECT password FROM usuarios WHERE id = ? AND rol = "admin"',
+        [adminId],
+        (err, results) => {
+            if (err) {
+                console.error('[ERROR] Error al verificar contraseña:', err);
+                return res.status(500).json({ success: false, error: 'Error en el servidor' });
+            }
+            
+            if (!results || results.length === 0) {
+                return res.status(404).json({ success: false, error: 'Administrador no encontrado' });
+            }
+            
+            const admin = results[0];
+            
+            // Verificar que la contraseña actual sea correcta
+            if (admin.password !== currentPassword) {
+                return res.status(401).json({ success: false, error: 'Contraseña actual incorrecta' });
+            }
+            
+            // Actualizar contraseña
+            config.query(
+                'UPDATE usuarios SET password = ? WHERE id = ?',
+                [newPassword, adminId],
+                (err, result) => {
+                    if (err) {
+                        console.error('[ERROR] Error al actualizar contraseña:', err);
+                        return res.status(500).json({ success: false, error: 'Error al actualizar contraseña' });
+                    }
+                    
+                    console.log(`[ADMIN] Contraseña actualizada exitosamente para usuario ${adminId}`);
+                    res.json({ success: true, message: 'Contraseña actualizada' });
+                }
+            );
+        }
+    );
+});
+
+// API - Cambiar email del admin
+router.post('/api/cambiar-email', (req, res) => {
+    const { adminId, newEmail, password } = req.body;
+    
+    console.log(`[ADMIN] Cambiar email para usuario ${adminId} a: ${newEmail}`);
+    
+    // Verificar contraseña
+    config.query(
+        'SELECT password FROM usuarios WHERE id = ? AND rol = "admin"',
+        [adminId],
+        (err, results) => {
+            if (err) {
+                console.error('[ERROR] Error al verificar contraseña:', err);
+                return res.status(500).json({ success: false, error: 'Error en el servidor' });
+            }
+            
+            if (!results || results.length === 0) {
+                return res.status(404).json({ success: false, error: 'Administrador no encontrado' });
+            }
+            
+            const admin = results[0];
+            
+            if (admin.password !== password) {
+                return res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
+            }
+            
+            // Verificar que el nuevo email no esté en uso
+            config.query(
+                'SELECT id FROM usuarios WHERE email = ? AND id != ?',
+                [newEmail, adminId],
+                (err, existing) => {
+                    if (err) {
+                        console.error('[ERROR] Error al verificar email:', err);
+                        return res.status(500).json({ success: false, error: 'Error en el servidor' });
+                    }
+                    
+                    if (existing && existing.length > 0) {
+                        return res.status(400).json({ success: false, error: 'El correo ya está en uso' });
+                    }
+                    
+                    // Actualizar email
+                    config.query(
+                        'UPDATE usuarios SET email = ? WHERE id = ?',
+                        [newEmail, adminId],
+                        (err, result) => {
+                            if (err) {
+                                console.error('[ERROR] Error al actualizar email:', err);
+                                return res.status(500).json({ success: false, error: 'Error al actualizar email' });
+                            }
+                            
+                            console.log(`[ADMIN] Email actualizado exitosamente para usuario ${adminId}`);
+                            res.json({ success: true, message: 'Email actualizado' });
+                        }
+                    );
+                }
+            );
+        }
+    );
+});
+
+// API - Eliminar cuenta de admin
+router.delete('/api/eliminar-cuenta', (req, res) => {
+    const { adminId, password } = req.body;
+    
+    console.log(`[ADMIN] Solicitud de eliminación de cuenta ${adminId}`);
+    
+    // Verificar contraseña
+    config.query(
+        'SELECT password, email FROM usuarios WHERE id = ? AND rol = "admin"',
+        [adminId],
+        (err, results) => {
+            if (err) {
+                console.error('[ERROR] Error al verificar contraseña:', err);
+                return res.status(500).json({ success: false, error: 'Error en el servidor' });
+            }
+            
+            if (!results || results.length === 0) {
+                return res.status(404).json({ success: false, error: 'Administrador no encontrado' });
+            }
+            
+            const admin = results[0];
+            
+            if (admin.password !== password) {
+                return res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
+            }
+            
+            // Verificar que no sea el último admin
+            config.query(
+                'SELECT COUNT(*) as totalAdmins FROM usuarios WHERE rol = "admin"',
+                (err, countResult) => {
+                    if (err) {
+                        console.error('[ERROR] Error al contar admins:', err);
+                        return res.status(500).json({ success: false, error: 'Error en el servidor' });
+                    }
+                    
+                    const totalAdmins = countResult[0].totalAdmins;
+                    
+                    if (totalAdmins <= 1) {
+                        return res.status(400).json({ 
+                            success: false, 
+                            error: 'No puedes eliminar la última cuenta de administrador del sistema' 
+                        });
+                    }
+                    
+                    // Eliminar cuenta
+                    config.query(
+                        'DELETE FROM usuarios WHERE id = ?',
+                        [adminId],
+                        (err, result) => {
+                            if (err) {
+                                console.error('[ERROR] Error al eliminar cuenta:', err);
+                                return res.status(500).json({ success: false, error: 'Error al eliminar cuenta' });
+                            }
+                            
+                            console.log(`[ADMIN] Cuenta ${admin.email} eliminada exitosamente`);
+                            res.json({ success: true, message: 'Cuenta eliminada' });
+                        }
+                    );
+                }
+            );
         }
     );
 });

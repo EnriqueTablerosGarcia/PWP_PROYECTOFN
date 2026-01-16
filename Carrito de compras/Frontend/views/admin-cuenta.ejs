@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Mi Cuenta</title>
+    <link rel="stylesheet" href="/css/admin-cuenta.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>👤 Información Admin</h1>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/productos">Productos</a>
+            <a href="/admin/ventas">Ventas</a>
+            <a href="/admin/usuarios">Usuarios</a>
+            <a href="/admin/logout">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card-container">
+            <h2 class="page-title">Información del Usuario</h2>
+            
+            <div class="info-section">
+                <label class="info-label">Correo:</label>
+                <div class="info-display">
+                    <input type="text" id="emailDisplay" readonly value="<%= adminEmail %>">
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <button class="btn-action btn-primary" onclick="openModal('password')">
+                    Cambiar Contraseña
+                </button>
+                <button class="btn-action btn-primary" onclick="openModal('email')">
+                    Cambiar Correo
+                </button>
+                <button class="btn-action btn-back" onclick="window.location.href='/admin/dashboard'">
+                    Regresar
+                </button>
+                <button class="btn-action btn-warning" onclick="cerrarSesion()">
+                    Cerrar Sesión
+                </button>
+                <button class="btn-action btn-danger" onclick="eliminarCuenta()">
+                    Eliminar Cuenta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Contraseña -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h2>🔒 Cambiar Contraseña</h2>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Contraseña Actual</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Nueva Contraseña</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">Guardar</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal('password')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Correo -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <h2>📧 Cambiar Correo</h2>
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="currentEmail">Correo Actual</label>
+                    <input type="email" id="currentEmail" value="<%= adminEmail %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="newEmail">Nuevo Correo</label>
+                    <input type="email" id="newEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordConfirm">Confirmar con Contraseña</label>
+                    <input type="password" id="passwordConfirm" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit">Guardar</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal('email')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/admin-cuenta.js"></script>
+</body>
+</html>
