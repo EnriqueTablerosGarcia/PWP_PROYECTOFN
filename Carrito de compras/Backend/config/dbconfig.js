@@ -14,7 +14,7 @@ const config = mysql.createPool({
 
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'kenai123',
+    password: process.env.DB_PASSWORD || 'Sebas1108.',
     database: process.env.DB_NAME || 'carrito_db',
 
     //connectionLimit : 10,
