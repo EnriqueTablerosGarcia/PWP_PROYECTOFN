@@ -30,7 +30,10 @@
     <div class="container-carrito">
         <div class="card carrito-resumen">
             <h2>Resumen del Carrito</h2>
-            <div id="carrito-items" class="items-list"></div>
+
+            <!-- Sección de productos con imágenes -->
+            <div id="carrito-items-imagenes" class="items-imagenes"></div>
+
             <div class="carrito-footer">
                 <button class="btn-blue" onclick="vaciarCarrito()">Vaciar Carrito</button>
                 <div class="total-section">
@@ -50,6 +53,55 @@
     <script src="/js/url-guard.js"></script>
     <script src="/js/carrito-utils.js"></script>
     <script src="/js/carrito-page.js"></script>
+
+    <script>
+        // Sobrescribir la función actualizarCarrito para mostrar productos con imágenes
+        function actualizarCarrito() {
+            const carritoItemsImagenes = document.getElementById('carrito-items-imagenes');
+            const totalElement = document.getElementById('total');
+
+            if (!carritoItemsImagenes || !totalElement) return;
+
+            carritoItemsImagenes.innerHTML = '';
+            let total = 0;
+
+            if (carrito.length === 0) {
+                carritoItemsImagenes.innerHTML = '<p style="text-align: center; color: #666; padding: 30px;">Tu carrito está vacío</p>';
+            } else {
+                carrito.forEach(producto => {
+                    // Determinar imagen según nombre del producto
+                    let imagenProducto = 'original';
+                    if (producto.nombre.toLowerCase().includes('gouda')) {
+                        imagenProducto = 'gouda';
+                    } else if (producto.nombre.toLowerCase().includes('mozzarella')) {
+                        imagenProducto = 'mozzarella';
+                    }
+
+                    const precio = parseFloat(producto.precio);
+                    const subtotal = precio * producto.cantidad;
+
+                    const productoDiv = document.createElement('div');
+                    productoDiv.className = 'carrito-item-imagen';
+                    productoDiv.innerHTML = `
+                        <img src="/img/babybel-${imagenProducto}.png" 
+                             alt="${producto.nombre}" 
+                             class="producto-img"
+                             onerror="this.src='/img/babybel-original.png'">
+                        <div class="producto-info">
+                            <p class="producto-nombre">${producto.nombre}</p>
+                            <p class="producto-detalle">Cantidad: ${producto.cantidad}</p>
+                            <p class="producto-detalle">Precio: $${precio.toFixed(2)}</p>
+                            <p class="producto-subtotal">Subtotal: $${subtotal.toFixed(2)}</p>
+                        </div>
+                    `;
+                    carritoItemsImagenes.appendChild(productoDiv);
+                    total += subtotal;
+                });
+            }
+
+            totalElement.textContent = `$${total.toFixed(2)}`;
+        }
+    </script>
 
 </body>
 

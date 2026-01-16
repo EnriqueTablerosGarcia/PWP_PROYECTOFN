@@ -1,34 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos Bancarios</title>
     <link rel="stylesheet" href="/css/datosbanc.css">
 </head>
-<body>
-    <div class="topbar">
-        <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
-                <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
-            </a>
-        </div>
-        <div class="topbar-center">
-            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
-        </div>
-        <div class="topbar-right">
-            <a href="/usuario" class="user-circle">U</a>
-        </div>
-    </div>
 
+<body>
     <div class="container">
         <h2>Datos de Pago</h2>
-
-        <div id="productos-ticket"></div>
-
-        <div class="total">
-            Total: $<span id="total-ticket">0.00</span>
-        </div>
 
         <h3>Ingresa tus Datos Bancarios</h3>
         <form id="form-pago" onsubmit="procesarPago(event)">
@@ -60,33 +42,28 @@
     </div>
 
     <script src="/js/sanitize.js"></script>
-    <script src="/js/ticket-page.js"></script>
     <script>
         // Procesar el pago y redirigir al ticket
         function procesarPago(event) {
             event.preventDefault();
-            
+
             // Validar que haya información de la compra
             const totalActual = localStorage.getItem('totalActual');
             const carritoActual = localStorage.getItem('carritoActual');
-            
+
             if (!totalActual || !carritoActual) {
                 alert('No hay información de compra. Por favor, regresa al carrito.');
                 window.location.href = '/carrito';
                 return;
             }
-            
+
             // Simular procesamiento de pago
             alert('Procesando pago...');
-            
+
             // Redirigir al ticket
             window.location.href = '/ticket';
         }
-        
-        // Mostrar productos al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            mostrarProductosTicket();
-        });
     </script>
 </body>
+
 </html>

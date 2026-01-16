@@ -18,7 +18,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .topbar-left {
@@ -49,7 +49,7 @@ body {
     letter-spacing: 2px;
     cursor: pointer;
     transition: transform 0.2s;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     text-decoration: none !important;
 }
 
@@ -129,11 +129,12 @@ body {
     background: #fff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-top: 150px;
 }
 
-h2, h3 {
+h2,
+h3 {
     text-align: center;
     color: #444;
     margin-bottom: 20px;
@@ -167,7 +168,7 @@ form {
 .form-group input:focus {
     border-color: #0078d7;
     outline: none;
-    box-shadow: 0 0 5px rgba(0,120,215,0.3);
+    box-shadow: 0 0 5px rgba(0, 120, 215, 0.3);
 }
 
 .button {
