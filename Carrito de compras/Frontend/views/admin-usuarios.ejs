@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Usuarios</title>
+    <link rel="stylesheet" href="/css/admin-panels.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>👥 Gestión de Usuarios</h1>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/productos">Productos</a>
+            <a href="/admin/ventas">Ventas</a>
+            <a href="/admin/logout">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre o email..." onkeyup="buscarUsuarios()">
+            <button onclick="limpiarBusqueda()">Limpiar</button>
+        </div>
+
+        <h2 style="margin-bottom: 20px; color: #333;">Lista de Usuarios (<span id="totalUsuarios">0</span>)</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usuariosBody">
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para ver historial de usuario -->
+    <div id="historialModal" class="modal">
+        <div class="modal-content">
+            <h2>📊 Historial de Usuario</h2>
+            
+            <div class="user-info" id="userInfo">
+                <!-- Info del usuario -->
+            </div>
+            
+            <h3 style="margin-bottom: 15px;">Historial de Compras:</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Venta</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historialBody">
+                        <!-- Historial -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="btn-close" onclick="cerrarHistorial()">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="/js/admin-usuarios.js"></script>
+</body>
+</html>

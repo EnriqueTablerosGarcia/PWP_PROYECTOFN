@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Login</title>
+    <link rel="stylesheet" href="/css/admin-login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div style="text-align: center;">
+            <span class="admin-badge">🔐 ADMINISTRADOR</span>
+        </div>
+        <h2>Panel de Administración</h2>
+        
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+        
+        <form method="POST" action="/admin/login">
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required placeholder="admin@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+        </form>
+        
+        <div class="back-link">
+            <a href="/">← Volver al sitio principal</a>
+        </div>
+    </div>
+</body>
+</html>

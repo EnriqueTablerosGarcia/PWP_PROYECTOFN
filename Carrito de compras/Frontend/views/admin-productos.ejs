@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Productos</title>
+    <link rel="stylesheet" href="/css/admin-panels.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>📦 Gestión de Productos</h1>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/ventas">Ventas</a>
+            <a href="/admin/usuarios">Usuarios</a>
+            <a href="/admin/logout">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-actions">
+            <h2 style="color: #333;">Lista de Productos</h2>
+            <button class="btn-primary" onclick="openModal()">+ Nuevo Producto</button>
+        </div>
+
+        <div class="table-container">
+            <table id="productosTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productosBody">
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para crear/editar producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Nuevo Producto</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="precio">Precio *</label>
+                    <input type="number" id="precio" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="stock">Stock *</label>
+                    <input type="number" id="stock" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imagen">URL de Imagen</label>
+                    <input type="text" id="imagen" placeholder="imagen.png">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/admin-productos.js"></script>
+</body>
+</html>

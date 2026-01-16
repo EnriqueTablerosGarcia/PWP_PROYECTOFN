@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import productroutes from './routes/productroutes.js';
 import carritoroutes from './routes/carritoroutes.js';
 import ventasroutes from './routes/ventasroutes.js';
+import adminroutes from './routes/adminroutes.js';
 import { sanitizeAll } from './middleware/sanitize-middleware.js';
 
 
@@ -52,6 +53,7 @@ app.use(express.static(path.join(projectRoot, 'Frontend')));
 app.use('/', productroutes);
 app.use('/api/carrito', carritoroutes);
 app.use('/api/ventas', ventasroutes);
+app.use('/admin', adminroutes);
 
 // Middleware para manejar rutas no encontradas (404)
 app.use((req, res, next) => {

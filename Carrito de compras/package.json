@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon backend/server.js",
-    "init-db": "node backend/initDB.js"
+    "init-db": "node backend/initDB.js",
+    "init-admin": "node backend/init-admin.js"
   },
   "type": "module",
   "keywords": [],

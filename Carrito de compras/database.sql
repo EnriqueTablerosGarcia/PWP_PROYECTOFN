@@ -2,12 +2,13 @@
 CREATE DATABASE IF NOT EXISTS carrito_db;
 USE carrito_db;
 
--- Tabla de usuarios
+-- Tabla de usuarios con rol de admin
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    rol ENUM('usuario', 'admin') DEFAULT 'usuario',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -60,6 +61,11 @@ INSERT INTO productos (nombre, precio, descripcion, imagen, stock) VALUES
 ('Mini Babybel Original', 45.00, 'Queso Mini Babybel Original con su característico envoltorio rojo', 'babybel-original.png', 50),
 ('Mini Babybel Gouda', 48.00, 'Queso Mini Babybel sabor Gouda con envoltorio amarillo', 'babybel-gouda.png', 50),
 ('Mini Babybel Mozzarella', 50.00, 'Queso Mini Babybel Mozzarella con envoltorio blanco', 'babybel-mozzarella.png', 50);
+
+-- Crear usuario administrador por defecto
+INSERT INTO usuarios (nombre, email, password, rol) 
+VALUES ('Kir Tableros', 'kirtableros@gmail.com', 'admin123', 'admin')
+ON DUPLICATE KEY UPDATE rol = 'admin';
 
 -- Verificar que las tablas se crearon correctamente
 SHOW TABLES;

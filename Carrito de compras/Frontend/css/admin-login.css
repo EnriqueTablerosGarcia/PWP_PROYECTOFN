@@ -1,0 +1,99 @@
+/* Estilos para Admin Login */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 100px auto;
+}
+
+.admin-badge {
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: #5568d3;
+}
+
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #c33;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}

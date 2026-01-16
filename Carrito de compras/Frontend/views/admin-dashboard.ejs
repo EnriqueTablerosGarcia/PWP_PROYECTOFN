@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>🎛️ Panel de Administración</h1>
+        <div class="user-info">
+            <span>👤 <%= adminName %></span>
+            <a href="/admin/logout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 style="margin-bottom: 30px; color: #333;">📊 Resumen General</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon">📦</div>
+                <h3>Total Productos</h3>
+                <div class="value"><%= stats.totalProductos %></div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">💰</div>
+                <h3>Total Ventas</h3>
+                <div class="value"><%= stats.totalVentas %></div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">👥</div>
+                <h3>Total Usuarios</h3>
+                <div class="value"><%= stats.totalUsuarios %></div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">💵</div>
+                <h3>Ingresos Totales</h3>
+                <div class="value">$<%= stats.ingresosTotales.toFixed(2) %></div>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 30px; color: #333;">🚀 Acciones Rápidas</h2>
+        
+        <div class="actions-grid">
+            <a href="/admin/productos" class="action-card productos">
+                <div class="icon">📦</div>
+                <h3>Gestionar Productos</h3>
+                <p>Crear, editar y eliminar productos del catálogo</p>
+            </a>
+            
+            <a href="/admin/ventas" class="action-card ventas">
+                <div class="icon">💰</div>
+                <h3>Ver Ventas</h3>
+                <p>Consultar historial de ventas y detalles</p>
+            </a>
+            
+            <a href="/admin/usuarios" class="action-card usuarios">
+                <div class="icon">👥</div>
+                <h3>Gestionar Usuarios</h3>
+                <p>Administrar usuarios registrados en el sistema</p>
+            </a>
+        </div>
+    </div>
+
+    <script src="/js/admin-dashboard.js"></script>
+</body>
+</html>

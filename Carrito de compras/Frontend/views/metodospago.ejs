@@ -9,15 +9,15 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="/carrito" class="cart-container">
+            <a href="/carrito" class="cart-container" onclick="return restaurarCarrito()">
                 <img src="/img/Carritoicono.png" alt="Carrito" class="cart-icon" id="cart-icon">
             </a>
         </div>
         <div class="topbar-center">
-            <a href="/principal" class="brand-title">QUESOS BABYBEL</a>
+            <a href="/principal" class="brand-title" onclick="return restaurarCarrito()">QUESOS BABYBEL</a>
         </div>
         <div class="topbar-right">
-            <a href="/usuario" class="user-circle">U</a>
+            <a href="/usuario" class="user-circle" onclick="return restaurarCarrito()">U</a>
         </div>
     </div>
 
@@ -56,5 +56,46 @@
             <p>¿No aparece tu banco? <a href="/datosbanc">Haz clic aquí para más opciones</a></p>
         </div>
     </div>
+
+    <script src="/js/carrito-utils.js"></script>
+    <script>
+        // Función para restaurar el carrito cuando el usuario salga de métodos de pago
+        async function restaurarCarrito() {
+            const carritoActual = localStorage.getItem('carritoActual');
+            const ultimaVentaId = localStorage.getItem('ultimaVentaId');
+            const usuarioId = localStorage.getItem('usuarioId');
+            
+            // Si hay carrito guardado y venta pendiente, restaurar al carrito
+            if (carritoActual && ultimaVentaId && usuarioId) {
+                try {
+                    const carrito = JSON.parse(carritoActual);
+                    
+                    // Restaurar cada producto al carrito del usuario
+                    for (const item of carrito) {
+                        await fetch('/api/carrito/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                usuarioId: parseInt(usuarioId),
+                                productoId: item.producto_id,
+                                cantidad: item.cantidad
+                            })
+                        });
+                    }
+                    
+                    console.log('Carrito restaurado exitosamente');
+                } catch (error) {
+                    console.error('Error al restaurar carrito:', error);
+                }
+            }
+            
+            return true; // Permitir navegación
+        }
+
+        // Detectar cuando el usuario abandona la página
+        window.addEventListener('beforeunload', async function(e) {
+            await restaurarCarrito();
+        });
+    </script>
 </body>
 </html>

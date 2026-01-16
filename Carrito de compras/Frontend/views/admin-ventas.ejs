@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Ventas</title>
+    <link rel="stylesheet" href="/css/admin-panels.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>💰 Gestión de Ventas</h1>
+        <div class="nav-links">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/productos">Productos</a>
+            <a href="/admin/usuarios">Usuarios</a>
+            <a href="/admin/logout">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-box">
+                <h3>Total Ventas</h3>
+                <div class="value" id="totalVentas">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Ingresos Totales</h3>
+                <div class="value" id="ingresosTotales">$0.00</div>
+            </div>
+            <div class="stat-box">
+                <h3>Promedio por Venta</h3>
+                <div class="value" id="promedioVenta">$0.00</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <input type="date" id="fechaDesde" placeholder="Desde">
+            <input type="date" id="fechaHasta" placeholder="Hasta">
+            <button onclick="filtrarVentas()">Filtrar</button>
+            <button onclick="limpiarFiltros()" style="background: #6b7280;">Limpiar</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Venta</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Total</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="ventasBody">
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para detalle de venta -->
+    <div id="detalleModal" class="modal">
+        <div class="modal-content">
+            <h2>📋 Detalle de Venta #<span id="ventaIdDetalle"></span></h2>
+            
+            <div class="detalle-header" id="detalleHeader">
+                <!-- Info de la venta -->
+            </div>
+            
+            <h3 style="margin-bottom: 15px;">Productos:</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalleBody">
+                        <!-- Detalles -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="btn-close" onclick="cerrarDetalle()">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="/js/admin-ventas.js"></script>
+</body>
+</html>

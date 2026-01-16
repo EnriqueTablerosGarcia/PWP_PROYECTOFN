@@ -6,7 +6,7 @@ const router = Router();
 // Crear una nueva venta desde el carrito
 router.post('/crear', ventasController.crearVenta);
 
-// Obtener todas las ventas (admin)
+// Obtener todas las ventas (admin) - DEBE IR ANTES de las rutas con parámetros
 router.get('/', ventasController.getAllVentas);
 
 // Obtener ventas de un usuario específico

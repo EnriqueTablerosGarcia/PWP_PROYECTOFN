@@ -36,13 +36,47 @@
 
             <div class="form-actions">
                 <button type="submit" class="button btn-comprar">Confirmar Pago</button>
-                <a href="/metodospago" class="button btn-regresar">Regresar</a>
+                <a href="/metodospago" class="button btn-regresar" onclick="return restaurarCarrito()">Regresar</a>
             </div>
         </form>
     </div>
 
     <script src="/js/sanitize.js"></script>
+    <script src="/js/carrito-utils.js"></script>
     <script>
+        // Función para restaurar el carrito cuando el usuario salga
+        async function restaurarCarrito() {
+            const carritoActual = localStorage.getItem('carritoActual');
+            const ultimaVentaId = localStorage.getItem('ultimaVentaId');
+            const usuarioId = localStorage.getItem('usuarioId');
+            
+            // Si hay carrito guardado y venta pendiente, restaurar al carrito
+            if (carritoActual && ultimaVentaId && usuarioId) {
+                try {
+                    const carrito = JSON.parse(carritoActual);
+                    
+                    // Restaurar cada producto al carrito del usuario
+                    for (const item of carrito) {
+                        await fetch('/api/carrito/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                usuarioId: parseInt(usuarioId),
+                                productoId: item.producto_id,
+                                cantidad: item.cantidad
+                            })
+                        });
+                    }
+                    
+                    console.log('Carrito restaurado exitosamente');
+                } catch (error) {
+                    console.error('Error al restaurar carrito:', error);
+                }
+            }
+            
+            return true; // Permitir navegación
+        }
+
         // Procesar el pago y redirigir al ticket
         function procesarPago(event) {
             event.preventDefault();
@@ -60,9 +94,21 @@
             // Simular procesamiento de pago
             alert('Procesando pago...');
 
+            // Limpiar datos de restauración ya que el pago fue exitoso
+            localStorage.removeItem('carritoActual');
+            localStorage.removeItem('ultimaVentaId');
+
             // Redirigir al ticket
             window.location.href = '/ticket';
         }
+
+        // Detectar cuando el usuario abandona la página sin confirmar pago
+        window.addEventListener('beforeunload', async function(e) {
+            // Solo restaurar si NO está confirmando el pago
+            if (!window.confirmandoPago) {
+                await restaurarCarrito();
+            }
+        });
     </script>
 </body>
 
