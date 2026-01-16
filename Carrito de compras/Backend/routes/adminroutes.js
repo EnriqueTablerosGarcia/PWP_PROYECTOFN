@@ -119,11 +119,31 @@ router.get('/usuarios', (req, res) => {
 
 // GET - Mi Cuenta (Admin)
 router.get('/cuenta', (req, res) => {
-    // Aquí podrías obtener la info del admin de la sesión
-    // Por ahora usamos valores por defecto
-    res.render('admin-cuenta', {
-        adminEmail: 'kirtableros@gmail.com'
-    });
+    // Obtener información del admin desde la BD
+    const adminEmail = 'kirtableros@gmail.com'; // Esto idealmente vendría de la sesión
+    
+    config.query(
+        'SELECT id, nombre, email, rol, created_at FROM usuarios WHERE email = ?',
+        [adminEmail],
+        (err, results) => {
+            if (err || !results || results.length === 0) {
+                return res.render('admin-cuenta', {
+                    adminEmail: adminEmail,
+                    adminNombre: 'Administrador',
+                    adminRol: 'admin',
+                    adminDesde: new Date().toLocaleDateString('es-MX')
+                });
+            }
+            
+            const admin = results[0];
+            res.render('admin-cuenta', {
+                adminEmail: admin.email,
+                adminNombre: admin.nombre,
+                adminRol: admin.rol,
+                adminDesde: new Date(admin.created_at).toLocaleDateString('es-MX')
+            });
+        }
+    );
 });
 
 // GET - Logout

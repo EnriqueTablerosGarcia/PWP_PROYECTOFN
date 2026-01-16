@@ -36,9 +36,40 @@ router.get('/ticket', (req, res) => {
     res.render('ticket');
 });
 
-router.get('/usuario', (req, res) => {
-    // La información del usuario se cargará desde localStorage en el cliente
-    res.render('usuario', { user: undefined });
+router.get('/usuario', async (req, res) => {
+    try {
+        // Obtener el email del usuario desde la query o renderizar sin datos
+        const userEmail = req.query.email;
+        
+        if (!userEmail) {
+            // Si no hay email en query, intentar renderizar la página para que JavaScript lo maneje
+            return res.render('usuario', { user: null });
+        }
+
+        // Consultar la base de datos para obtener información del usuario
+        const connection = await require('../config/dbconfig.js').default;
+        
+        connection.query(
+            'SELECT id, nombre, email, rol FROM usuarios WHERE email = ?',
+            [userEmail],
+            (err, rows) => {
+                if (err) {
+                    console.error('Error al obtener información del usuario:', err);
+                    return res.render('usuario', { user: null });
+                }
+
+                if (rows && rows.length > 0) {
+                    const user = rows[0];
+                    res.render('usuario', { user });
+                } else {
+                    res.render('usuario', { user: null });
+                }
+            }
+        );
+    } catch (error) {
+        console.error('Error al obtener información del usuario:', error);
+        res.render('usuario', { user: null });
+    }
 });
 
 router.get('/cambContra', (req, res) => {

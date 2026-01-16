@@ -20,30 +20,85 @@
 
     <div class="container">
         <div class="card-container">
-            <h2 class="page-title">Información del Usuario</h2>
+            <div class="admin-badge-header">
+                <span class="crown-icon">👑</span>
+                <h2 class="page-title">Cuenta de Administrador</h2>
+            </div>
             
-            <div class="info-section">
-                <label class="info-label">Correo:</label>
-                <div class="info-display">
-                    <input type="text" id="emailDisplay" readonly value="<%= adminEmail %>">
+            <div class="admin-info-grid">
+                <div class="info-item">
+                    <label class="info-label">Nombre:</label>
+                    <div class="info-value"><%= adminNombre %></div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">Correo:</label>
+                    <div class="info-value"><%= adminEmail %></div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">Rol:</label>
+                    <div class="info-value">
+                        <span class="role-badge <%= adminRol === 'admin' ? 'admin' : 'user' %>">
+                            <%= adminRol === 'admin' ? '👑 ADMINISTRADOR' : '👤 USUARIO' %>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">Cuenta desde:</label>
+                    <div class="info-value"><%= adminDesde %></div>
+                </div>
+            </div>
+
+            <div class="permissions-section">
+                <h3 class="permissions-title">✅ Permisos de Administrador</h3>
+                <div class="permissions-list">
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Gestionar productos (crear, editar, eliminar)</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Ver todas las ventas del sistema</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Gestionar usuarios registrados</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Otorgar y quitar permisos de administrador</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Acceso al panel de estadísticas</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="permission-icon">✓</span>
+                        <span class="permission-text">Modificar información de cuenta</span>
+                    </div>
                 </div>
             </div>
 
             <div class="actions-section">
                 <button class="btn-action btn-primary" onclick="openModal('password')">
-                    Cambiar Contraseña
+                    🔒 Cambiar Contraseña
                 </button>
                 <button class="btn-action btn-primary" onclick="openModal('email')">
-                    Cambiar Correo
+                    📧 Cambiar Correo
+                </button>
+                <button class="btn-action btn-secondary" onclick="window.location.href='/admin/usuarios'">
+                    ⭐ Gestionar Permisos de Otros Usuarios
                 </button>
                 <button class="btn-action btn-back" onclick="window.location.href='/admin/dashboard'">
-                    Regresar
+                    ↩️ Regresar al Dashboard
                 </button>
                 <button class="btn-action btn-warning" onclick="cerrarSesion()">
-                    Cerrar Sesión
+                    🔓 Cerrar Sesión
                 </button>
                 <button class="btn-action btn-danger" onclick="eliminarCuenta()">
-                    Eliminar Cuenta
+                    ❌ Eliminar Cuenta
                 </button>
             </div>
         </div>

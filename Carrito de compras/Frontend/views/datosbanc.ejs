@@ -16,22 +16,37 @@
         <form id="form-pago" onsubmit="procesarPago(event)">
             <div class="form-group">
                 <label for="nombre-usuario">Nombre del Titular</label>
-                <input type="text" id="nombre-usuario" name="nombreUsuario" required>
+                <input type="text" id="nombre-usuario" name="nombreUsuario" required 
+                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                       title="Solo letras y espacios permitidos"
+                       oninput="validarNombreTitular(this)">
+                <span class="error-message" id="error-nombre"></span>
             </div>
 
             <div class="form-group">
                 <label for="numero-tarjeta">Número de Tarjeta</label>
-                <input type="text" id="numero-tarjeta" name="numeroTarjeta" maxlength="16" pattern="[0-9]{16}" required>
+                <input type="text" id="numero-tarjeta" name="numeroTarjeta" 
+                       maxlength="19" 
+                       placeholder="XXXX XXXX XXXX XXXX"
+                       required
+                       oninput="validarNumeroTarjeta(this)">
+                <span class="error-message" id="error-tarjeta"></span>
             </div>
 
             <div class="form-group">
                 <label for="fecha-exp">Fecha de Expiración</label>
-                <input type="month" id="fecha-exp" name="fechaExp" required>
+                <input type="month" id="fecha-exp" name="fechaExp" required onchange="validarFechaExpiracion(this)">
+                <span class="error-message" id="error-fecha"></span>
             </div>
 
             <div class="form-group">
                 <label for="cvv">CVV</label>
-                <input type="password" id="cvv" name="cvv" maxlength="3" pattern="[0-9]{3}" required>
+                <input type="password" id="cvv" name="cvv" 
+                       maxlength="4" 
+                       placeholder="XXX"
+                       required
+                       oninput="validarCVV(this)">
+                <span class="error-message" id="error-cvv"></span>
             </div>
 
             <div class="form-actions">
@@ -44,6 +59,136 @@
     <script src="/js/sanitize.js"></script>
     <script src="/js/carrito-utils.js"></script>
     <script>
+        // Validación para el nombre del titular (solo letras y espacios)
+        function validarNombreTitular(input) {
+            const valor = input.value;
+            const errorSpan = document.getElementById('error-nombre');
+            
+            // Remover cualquier carácter que no sea letra o espacio
+            input.value = valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');
+            
+            // Validar longitud mínima
+            if (input.value.trim().length < 3) {
+                errorSpan.textContent = 'El nombre debe tener al menos 3 caracteres';
+                errorSpan.style.display = 'block';
+                input.setCustomValidity('Nombre inválido');
+            } else if (input.value.trim().length > 50) {
+                errorSpan.textContent = 'El nombre es demasiado largo';
+                errorSpan.style.display = 'block';
+                input.setCustomValidity('Nombre inválido');
+            } else {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+
+        // Validación para el número de tarjeta (solo números, formato automático)
+        function validarNumeroTarjeta(input) {
+            const errorSpan = document.getElementById('error-tarjeta');
+            
+            // Remover todo excepto números
+            let valor = input.value.replace(/\D/g, '');
+            
+            // Limitar a 16 dígitos
+            if (valor.length > 16) {
+                valor = valor.substring(0, 16);
+            }
+            
+            // Formatear con espacios cada 4 dígitos
+            let valorFormateado = '';
+            for (let i = 0; i < valor.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    valorFormateado += ' ';
+                }
+                valorFormateado += valor[i];
+            }
+            
+            input.value = valorFormateado;
+            
+            // Validar longitud
+            if (valor.length > 0 && valor.length < 13) {
+                errorSpan.textContent = 'El número de tarjeta debe tener entre 13 y 16 dígitos';
+                errorSpan.style.display = 'block';
+                input.setCustomValidity('Número de tarjeta inválido');
+            } else if (valor.length >= 13 && valor.length <= 16) {
+                // Validación de Luhn (algoritmo de verificación de tarjetas)
+                if (!validarLuhn(valor)) {
+                    errorSpan.textContent = 'Número de tarjeta inválido';
+                    errorSpan.style.display = 'block';
+                    input.setCustomValidity('Número de tarjeta inválido');
+                } else {
+                    errorSpan.style.display = 'none';
+                    input.setCustomValidity('');
+                }
+            } else {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+
+        // Algoritmo de Luhn para validar números de tarjeta
+        function validarLuhn(numero) {
+            let suma = 0;
+            let alternar = false;
+            
+            for (let i = numero.length - 1; i >= 0; i--) {
+                let digito = parseInt(numero.charAt(i), 10);
+                
+                if (alternar) {
+                    digito *= 2;
+                    if (digito > 9) {
+                        digito -= 9;
+                    }
+                }
+                
+                suma += digito;
+                alternar = !alternar;
+            }
+            
+            return (suma % 10) === 0;
+        }
+
+        // Validación para el CVV (solo números, 3-4 dígitos)
+        function validarCVV(input) {
+            const errorSpan = document.getElementById('error-cvv');
+            
+            // Remover todo excepto números
+            input.value = input.value.replace(/\D/g, '');
+            
+            // Validar longitud
+            if (input.value.length > 0 && input.value.length < 3) {
+                errorSpan.textContent = 'El CVV debe tener 3 o 4 dígitos';
+                errorSpan.style.display = 'block';
+                input.setCustomValidity('CVV inválido');
+            } else if (input.value.length >= 3) {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            } else {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+
+        // Validación para la fecha de expiración
+        function validarFechaExpiracion(input) {
+            const errorSpan = document.getElementById('error-fecha');
+            const fechaSeleccionada = new Date(input.value + '-01');
+            const fechaActual = new Date();
+            
+            // Establecer al primer día del mes actual
+            fechaActual.setDate(1);
+            fechaActual.setHours(0, 0, 0, 0);
+            
+            if (fechaSeleccionada < fechaActual) {
+                errorSpan.textContent = 'La tarjeta está vencida';
+                errorSpan.style.display = 'block';
+                input.setCustomValidity('Fecha inválida');
+            } else {
+                errorSpan.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+
         // Función para restaurar el carrito cuando el usuario salga
         async function restaurarCarrito() {
             const carritoActual = localStorage.getItem('carritoActual');
@@ -81,25 +226,49 @@
         function procesarPago(event) {
             event.preventDefault();
 
-            // Validar que haya información de la compra
-            const totalActual = localStorage.getItem('totalActual');
-            const carritoActual = localStorage.getItem('carritoActual');
+            // Validar todos los campos antes de procesar
+            const nombreInput = document.getElementById('nombre-usuario');
+            const tarjetaInput = document.getElementById('numero-tarjeta');
+            const cvvInput = document.getElementById('cvv');
+            const fechaInput = document.getElementById('fecha-exp');
 
-            if (!totalActual || !carritoActual) {
-                alert('No hay información de compra. Por favor, regresa al carrito.');
-                window.location.href = '/carrito';
-                return;
+            // Re-validar todos los campos
+            validarNombreTitular(nombreInput);
+            validarNumeroTarjeta(tarjetaInput);
+            validarCVV(cvvInput);
+            validarFechaExpiracion(fechaInput);
+
+            // Verificar si hay errores
+            if (nombreInput.validity.valid && 
+                tarjetaInput.validity.valid && 
+                cvvInput.validity.valid && 
+                fechaInput.validity.valid) {
+                
+                // Validar que haya información de la compra
+                const totalActual = localStorage.getItem('totalActual');
+                const carritoActual = localStorage.getItem('carritoActual');
+
+                if (!totalActual || !carritoActual) {
+                    alert('No hay información de compra. Por favor, regresa al carrito.');
+                    window.location.href = '/carrito';
+                    return;
+                }
+
+                // Marcar que se está confirmando el pago
+                window.confirmandoPago = true;
+
+                // Simular procesamiento de pago
+                alert('✓ Pago procesado exitosamente');
+
+                // Limpiar datos de restauración ya que el pago fue exitoso
+                localStorage.removeItem('carritoActual');
+                localStorage.removeItem('ultimaVentaId');
+
+                // Redirigir al ticket
+                window.location.href = '/ticket';
+            } else {
+                alert('Por favor, corrige los errores en el formulario antes de continuar.');
             }
-
-            // Simular procesamiento de pago
-            alert('Procesando pago...');
-
-            // Limpiar datos de restauración ya que el pago fue exitoso
-            localStorage.removeItem('carritoActual');
-            localStorage.removeItem('ultimaVentaId');
-
-            // Redirigir al ticket
-            window.location.href = '/ticket';
         }
 
         // Detectar cuando el usuario abandona la página sin confirmar pago

@@ -9,6 +9,12 @@ let usuario = null;
 function cargarDatosUsuario() {
     const usuarioEmail = localStorage.getItem('usuarioEmail');
     if (usuarioEmail) {
+        // Redirigir a la ruta con el email como parámetro para obtener datos del servidor
+        const currentUrl = new URL(window.location.href);
+        if (!currentUrl.searchParams.has('email')) {
+            window.location.href = `/usuario?email=${encodeURIComponent(usuarioEmail)}`;
+        }
+        
         const cuadro = document.querySelector('.cuadro');
         if (cuadro) {
             cuadro.textContent = usuarioEmail;
