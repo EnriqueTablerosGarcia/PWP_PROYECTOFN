@@ -247,6 +247,7 @@
                 // Validar que haya información de la compra
                 const totalActual = localStorage.getItem('totalActual');
                 const carritoActual = localStorage.getItem('carritoActual');
+                const ultimaVentaId = localStorage.getItem('ultimaVentaId');
 
                 if (!totalActual || !carritoActual) {
                     alert('No hay información de compra. Por favor, regresa al carrito.');
@@ -257,11 +258,20 @@
                 // Marcar que se está confirmando el pago
                 window.confirmandoPago = true;
 
+                // Guardar datos de pago para el ticket
+                const datosPago = {
+                    nombreTitular: nombreInput.value,
+                    numeroTarjeta: '****' + tarjetaInput.value.replace(/\s/g, '').slice(-4),
+                    fechaPago: new Date().toLocaleString('es-MX'),
+                    ventaId: ultimaVentaId
+                };
+                localStorage.setItem('datosPago', JSON.stringify(datosPago));
+
                 // Simular procesamiento de pago
                 alert('✓ Pago procesado exitosamente');
 
-                // Limpiar datos de restauración ya que el pago fue exitoso
-                localStorage.removeItem('carritoActual');
+                // NO limpiar carritoActual y totalActual todavía - se necesitan en el ticket
+                // Solo limpiar el ultimaVentaId
                 localStorage.removeItem('ultimaVentaId');
 
                 // Redirigir al ticket

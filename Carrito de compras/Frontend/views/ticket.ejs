@@ -23,15 +23,23 @@
 
     <div class="container" style="margin-top: 80px;">
         <h2>Ticket de Compra</h2>
+        
+        <div class="info-box" id="info-pago">
+            <div class="section-title">Información de Pago</div>
+            <p><strong>Titular:</strong> <span id="nombre-titular">-</span></p>
+            <p><strong>Tarjeta:</strong> <span id="tarjeta-numero">-</span></p>
+            <p><strong>Fecha:</strong> <span id="fecha-pago">-</span></p>
+            <p><strong>ID Venta:</strong> <span id="venta-id">-</span></p>
+        </div>
 
         <div id="productos-ticket"></div>
 
         <div class="total">
-            Total: $<span id="total-ticket">0.00</span>
+            Total Pagado: $<span id="total-ticket">0.00</span>
         </div>
 
-        <button onclick="confirmarCompra()" class="button btn-comprar">Comprar</button>
-        <a href="/principal" class="button btn-regresar">Regresar</a>
+        <button onclick="confirmarCompra()" class="button btn-comprar">Confirmar y Finalizar</button>
+        <a href="/principal" class="button btn-regresar">Regresar a Inicio</a>
     </div>
 
     <script src="/js/sanitize.js"></script>

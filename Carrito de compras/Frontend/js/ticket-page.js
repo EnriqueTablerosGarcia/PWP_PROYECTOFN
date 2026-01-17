@@ -90,14 +90,13 @@ function confirmarCompra() {
     const totalActual = localStorage.getItem('totalActual') || '0.00';
     
     if (carritoActual.length === 0) {
-        alert('No hay productos para comprar');
-        window.location.href = '/carrito';
+        alert('No hay productos para confirmar');
+        window.location.href = '/principal';
         return;
     }
 
     // Confirmación final
-    if (!confirm(`¿Confirmar compra final por $${totalActual}?`)) {
-        alert('Compra cancelada');
+    if (!confirm(`¿Confirmar que recibiste tu compra por $${totalActual}?`)) {
         return;
     }
 
@@ -105,14 +104,37 @@ function confirmarCompra() {
     localStorage.setItem('carritoComprado', JSON.stringify(carritoActual));
     localStorage.setItem('totalCompra', totalActual);
     
-    // Limpiar carrito temporal
+    // Ahora sí limpiar todo el carrito temporal y datos de pago
     localStorage.removeItem('carritoActual');
     localStorage.removeItem('totalActual');
+    localStorage.removeItem('datosPago');
 
+    alert('✓ ¡Compra confirmada exitosamente!');
     window.location.href = '/confirmacion';
+}
+
+/**
+ * Mostrar datos del pago en el ticket
+ */
+function mostrarDatosPago() {
+    const datosPago = JSON.parse(localStorage.getItem('datosPago') || '{}');
+    
+    if (datosPago.nombreTitular) {
+        document.getElementById('nombre-titular').textContent = datosPago.nombreTitular;
+        document.getElementById('tarjeta-numero').textContent = datosPago.numeroTarjeta || '****';
+        document.getElementById('fecha-pago').textContent = datosPago.fechaPago || new Date().toLocaleString('es-MX');
+        document.getElementById('venta-id').textContent = datosPago.ventaId || 'N/A';
+    } else {
+        // Si no hay datos de pago, ocultar la sección
+        const infoPago = document.getElementById('info-pago');
+        if (infoPago) {
+            infoPago.style.display = 'none';
+        }
+    }
 }
 
 // Inicializar página de ticket
 document.addEventListener('DOMContentLoaded', function() {
+    mostrarDatosPago();
     mostrarProductosTicket();
 });

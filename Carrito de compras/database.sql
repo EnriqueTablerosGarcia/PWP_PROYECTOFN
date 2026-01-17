@@ -65,7 +65,7 @@ INSERT INTO productos (nombre, precio, descripcion, imagen, stock) VALUES
 -- Crear usuario administrador por defecto
 INSERT INTO usuarios (nombre, email, password, rol) 
 VALUES ('Kir Tableros', 'kirtableros@gmail.com', 'admin123', 'admin')
-ON DUPLICATE KEY UPDATE rol = 'admin';
+ON DUPLICATE KEY UPDATE rol = 'admin'; //hacer un rol y q sobrescriba 
 
 -- Verificar que las tablas se crearon correctamente
 SHOW TABLES;
